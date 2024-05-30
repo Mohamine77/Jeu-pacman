@@ -24,6 +24,7 @@ namespace Jeu_pacman
 
             this.KeyPreview = true; // Permet au formulaire de capturer les événements de touches
             this.KeyDown += new KeyEventHandler(Jeu_KeyDown); // Abonnez-vous à l'événement KeyDown
+            this.PreviewKeyDown += new PreviewKeyDownEventHandler(Jeu_PreviewKeyDown); // Abonnez-vous à l'événement PreviewKeyDown pour les touches fléchées
             this.panel1.Paint += new PaintEventHandler(panel1_Paint);
             this.panel1.Invalidate();
 
@@ -33,7 +34,7 @@ namespace Jeu_pacman
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            this.Focus();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -45,7 +46,7 @@ namespace Jeu_pacman
 
         private void label2_Click(object sender, EventArgs e)
         {
-
+            this.Focus();
         }
 
         private void panel1_Paint(object sender, PaintEventArgs e)
@@ -158,6 +159,22 @@ namespace Jeu_pacman
             graphics.DrawImage(joueurImage, joueurX * cellSize, joueurY * cellSize, cellSize, cellSize);
         }
 
+
+
+        private void Jeu_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            // Empêcher les touches fléchées de déclencher les événements par défaut
+            switch (e.KeyCode)
+            {
+                case Keys.Up:
+                case Keys.Down:
+                case Keys.Left:
+                case Keys.Right:
+                    e.IsInputKey = true;
+                    break;
+            }
+        }
+
         private void Jeu_KeyDown(object sender, KeyEventArgs e)
         {
             int newX = joueurX;
@@ -166,18 +183,24 @@ namespace Jeu_pacman
             switch (e.KeyCode)
             {
                 case Keys.Z:
-                    newY--; // Aller en haut
+                case Keys.Up:
+                    newY--; // Aller en haut    
                     break;
                 case Keys.Q:
+                case Keys.Left:
                     newX--; // Aller à gauche
                     break;
                 case Keys.S:
+                case Keys.Down:
                     newY++; // Aller en bas
                     break;
                 case Keys.D:
+                case Keys.Right:
                     newX++; // Aller à droite
                     break;
+
             }
+
 
             if (newX >= 0 && newX < largeur && newY >= 0 && newY < hauteur && lab[newY, newX] == 0)
             {

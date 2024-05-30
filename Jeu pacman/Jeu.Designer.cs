@@ -34,7 +34,13 @@
             label2 = new Label();
             label3 = new Label();
             panel1 = new Panel();
+            pictureBox3 = new PictureBox();
+            pictureBox4 = new PictureBox();
+            pictureBox2 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox4).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             SuspendLayout();
             // 
             // pictureBox1
@@ -60,12 +66,12 @@
             // 
             label2.AutoSize = true;
             label2.BackColor = Color.Sienna;
-            label2.Font = new Font("Symtext", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label2.Font = new Font("Microsoft Sans Serif", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label2.ForeColor = Color.FromArgb(255, 224, 192);
             label2.Image = (Image)resources.GetObject("label2.Image");
             label2.Location = new Point(443, 18);
             label2.Name = "label2";
-            label2.Size = new Size(151, 44);
+            label2.Size = new Size(109, 36);
             label2.TabIndex = 4;
             label2.Text = "Score :";
             label2.Click += label2_Click;
@@ -74,12 +80,12 @@
             // 
             label3.AutoSize = true;
             label3.BackColor = Color.Sienna;
-            label3.Font = new Font("Symtext", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label3.Font = new Font("Microsoft Sans Serif", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label3.ForeColor = Color.FromArgb(255, 224, 192);
             label3.Image = (Image)resources.GetObject("label3.Image");
             label3.Location = new Point(869, 18);
             label3.Name = "label3";
-            label3.Size = new Size(160, 44);
+            label3.Size = new Size(124, 36);
             label3.TabIndex = 5;
             label3.Text = "Niveau :";
             // 
@@ -91,11 +97,44 @@
             panel1.TabIndex = 6;
             panel1.Paint += panel1_Paint;
             // 
+            // pictureBox3
+            // 
+            pictureBox3.BackColor = SystemColors.ScrollBar;
+            pictureBox3.Image = (Image)resources.GetObject("pictureBox3.Image");
+            pictureBox3.Location = new Point(106, 18);
+            pictureBox3.Name = "pictureBox3";
+            pictureBox3.Size = new Size(97, 89);
+            pictureBox3.TabIndex = 8;
+            pictureBox3.TabStop = false;
+            // 
+            // pictureBox4
+            // 
+            pictureBox4.BackColor = SystemColors.ScrollBar;
+            pictureBox4.Image = (Image)resources.GetObject("pictureBox4.Image");
+            pictureBox4.Location = new Point(58, 104);
+            pictureBox4.Name = "pictureBox4";
+            pictureBox4.Size = new Size(97, 89);
+            pictureBox4.TabIndex = 9;
+            pictureBox4.TabStop = false;
+            // 
+            // pictureBox2
+            // 
+            pictureBox2.BackColor = SystemColors.ScrollBar;
+            pictureBox2.Image = (Image)resources.GetObject("pictureBox2.Image");
+            pictureBox2.Location = new Point(12, 18);
+            pictureBox2.Name = "pictureBox2";
+            pictureBox2.Size = new Size(97, 89);
+            pictureBox2.TabIndex = 7;
+            pictureBox2.TabStop = false;
+            // 
             // Jeu
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1563, 876);
+            Controls.Add(pictureBox4);
+            Controls.Add(pictureBox3);
+            Controls.Add(pictureBox2);
             Controls.Add(panel1);
             Controls.Add(label3);
             Controls.Add(label2);
@@ -105,6 +144,9 @@
             Text = "Form1";
             Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox4).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -116,5 +158,8 @@
         private Label label2;
         private Label label3;
         private Panel panel1;
+        private PictureBox pictureBox3;
+        private PictureBox pictureBox4;
+        private PictureBox pictureBox2;
     }
 }
