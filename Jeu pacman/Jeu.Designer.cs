@@ -74,7 +74,7 @@
             label2.Size = new Size(109, 36);
             label2.TabIndex = 4;
             label2.Text = "Score :";
-            label2.Click += label2_Click;
+            
             // 
             // label3
             // 
@@ -106,6 +106,7 @@
             pictureBox3.Size = new Size(97, 89);
             pictureBox3.TabIndex = 8;
             pictureBox3.TabStop = false;
+           
             // 
             // pictureBox4
             // 
@@ -116,6 +117,7 @@
             pictureBox4.Size = new Size(97, 89);
             pictureBox4.TabIndex = 9;
             pictureBox4.TabStop = false;
+            
             // 
             // pictureBox2
             // 

@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Éléments de solution", "Éléments de solution", "{4302F1EA-1FCF-40D0-AB01-5FB1FB9BA93C}"
 	ProjectSection(SolutionItems) = preProject
 		coeur.png = coeur.png
+		images\ennemi.png = images\ennemi.png
 		images\jeu.png = images\jeu.png
 	EndProjectSection
 EndProject

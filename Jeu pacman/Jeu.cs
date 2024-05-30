@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -9,27 +8,41 @@ namespace Jeu_pacman
     public partial class Jeu : Form
     {
         private static Random random = new Random();
-        private static int largeur = 52; // largeur du labyrinthe
-        private static int hauteur = 38; // hauteur du labyrinthe
+        private const int largeur = 52; // largeur du labyrinthe
+        private const int hauteur = 38; // hauteur du labyrinthe
         private static int[,] lab = new int[hauteur, largeur]; // tableau qui représente le labyrinthe
         private int joueurX = 2; // position initiale du joueur (x)
         private int joueurY = 2; // position initiale du joueur (y)
         private Bitmap joueurImage; // image du joueur
+        private Bitmap ennemiImage; // image de l'ennemi
+        private Ennemi ennemi; // ennemi du jeu
+        private System.Windows.Forms.Timer ennemiTimer; // Timer pour le déplacement de l'ennemi
+        private bool premierDeplacement = false; // Indicateur pour le premier déplacement du joueur
 
         public Jeu()
         {
             InitializeComponent();
             GenerationLab();
             ConnectChemin();
+            InitGameComponents();
+        }
 
-            this.KeyPreview = true; // Permet au formulaire de capturer les événements de touches
-            this.KeyDown += new KeyEventHandler(Jeu_KeyDown); // Abonnez-vous à l'événement KeyDown
-            this.PreviewKeyDown += new PreviewKeyDownEventHandler(Jeu_PreviewKeyDown); // Abonnez-vous à l'événement PreviewKeyDown pour les touches fléchées
+        private void InitGameComponents()
+        {
+            this.KeyPreview = true;
+            this.KeyDown += new KeyEventHandler(Jeu_KeyDown);
+            this.PreviewKeyDown += new PreviewKeyDownEventHandler(Jeu_PreviewKeyDown);
             this.panel1.Paint += new PaintEventHandler(panel1_Paint);
             this.panel1.Invalidate();
 
-            // Charger l'image du joueur
-            joueurImage = new Bitmap("C:\\Users\\Amine\\Desktop\\Jeu-pacman-master\\images\\jeu.png"); // Assurez-vous que l'image est dans le bon emplacement
+            joueurImage = new Bitmap("C:\\Users\\Amine\\Desktop\\Jeu-pacman-master\\images\\jeu.png");
+            ennemiImage = new Bitmap("C:\\Users\\Amine\\Desktop\\Jeu-pacman-master\\images\\ennemi.png");
+
+            ennemi = new Ennemi(random.Next(largeur), random.Next(hauteur), 1.0);
+
+            ennemiTimer = new System.Windows.Forms.Timer();
+            ennemiTimer.Interval = 500; // Intervalle en millisecondes (500ms = 0.5s)
+            ennemiTimer.Tick += new EventHandler(EnnemiTimer_Tick);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -51,8 +64,8 @@ namespace Jeu_pacman
 
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
-            // Dessiner le labyrinthe
             DessinerLabyrinthe(e.Graphics);
+            DessinerEnnemi(e.Graphics);
         }
 
         private void GenerationLab()
@@ -70,14 +83,12 @@ namespace Jeu_pacman
         private void CreerLab(int x, int y)
         {
             lab[y, x] = 0; // dire que cette cellule est visitée
-            // définir l'ordre aléatoire des directions à explorer
             List<Tuple<int, int>> directions = new List<Tuple<int, int>>()
             {
                 Tuple.Create(1, 0), Tuple.Create(-1, 0), Tuple.Create(0, 1), Tuple.Create(0, -1)
             };
             directions = Shuffle(directions); // mélanger les directions pour explorer aléatoirement
 
-            // explorer chaque direction
             foreach (var direction in directions)
             {
                 int dx = direction.Item1;
@@ -85,12 +96,10 @@ namespace Jeu_pacman
                 int nx = x + 2 * dx;
                 int ny = y + 2 * dy;
 
-                // vérif si la prochaine cellule est valide et non visitée
                 if (nx > 0 && nx < largeur && ny > 0 && ny < hauteur && lab[ny, nx] == 1)
                 {
-                    // casser le mur entre la cellule actuelle et la prochaine cellule
                     lab[y + dy, x + dx] = 0;
-                    CreerLab(nx, ny); // explorer récursivement à partir de la prochaine cellule
+                    CreerLab(nx, ny);
                 }
             }
         }
@@ -101,15 +110,15 @@ namespace Jeu_pacman
             {
                 for (int x = 1; x < largeur; x += 2)
                 {
-                    if (lab[y, x] == 0) // si la cellule est visitée
+                    if (lab[y, x] == 0)
                     {
-                        List<Tuple<int, int>> voisins = TrouveVoisins(x, y); // obtenir les cellules voisines non visitées
+                        List<Tuple<int, int>> voisins = TrouveVoisins(x, y);
                         if (voisins.Count > 0)
                         {
-                            Tuple<int, int> neighbor = voisins[random.Next(voisins.Count)]; // prendre une cellule voisine aléatoire
+                            Tuple<int, int> neighbor = voisins[random.Next(voisins.Count)];
                             int nx = neighbor.Item1;
                             int ny = neighbor.Item2;
-                            lab[(y + ny) / 2, (x + nx) / 2] = 0; // casser le mur entre la cellule actuelle et le voisin choisi
+                            lab[(y + ny) / 2, (x + nx) / 2] = 0;
                         }
                     }
                 }
@@ -142,7 +151,7 @@ namespace Jeu_pacman
 
         private void DessinerLabyrinthe(Graphics graphics)
         {
-            int cellSize = 20; // taille de chaque cellule du labyrinthe
+            const int cellSize = 20; // taille de chaque cellule du labyrinthe
             Brush murBrush = Brushes.Black;
             Brush cheminBrush = Brushes.White;
 
@@ -155,15 +164,17 @@ namespace Jeu_pacman
                 }
             }
 
-            // Dessiner le joueur
             graphics.DrawImage(joueurImage, joueurX * cellSize, joueurY * cellSize, cellSize, cellSize);
         }
 
-
+        private void DessinerEnnemi(Graphics graphics)
+        {
+            const int cellSize = 20; // taille de chaque cellule du labyrinthe
+            graphics.DrawImage(ennemiImage, ennemi.X * cellSize, ennemi.Y * cellSize, cellSize, cellSize);
+        }
 
         private void Jeu_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
-            // Empêcher les touches fléchées de déclencher les événements par défaut
             switch (e.KeyCode)
             {
                 case Keys.Up:
@@ -198,9 +209,7 @@ namespace Jeu_pacman
                 case Keys.Right:
                     newX++; // Aller à droite
                     break;
-
             }
-
 
             if (newX >= 0 && newX < largeur && newY >= 0 && newY < hauteur && lab[newY, newX] == 0)
             {
@@ -208,6 +217,51 @@ namespace Jeu_pacman
                 joueurY = newY;
                 this.panel1.Invalidate(); // Redessiner le panel
             }
+            if (!premierDeplacement)
+            {
+                premierDeplacement = true;
+                ennemiTimer.Start(); // Démarrer le Timer au premier déplacement du joueur
+            }
+        }
+
+        private void EnnemiTimer_Tick(object sender, EventArgs e)
+        {
+            DeplacerEnnemi();
+            this.panel1.Invalidate(); // Redessiner le panel
+        }
+
+        private void DeplacerEnnemi()
+        {
+            bool deplacementValide = false;
+            while (!deplacementValide)
+            {
+                int deplacementX = random.Next(-1, 2);
+                int deplacementY = random.Next(-1, 2);
+
+                int nouveauX = ennemi.X + deplacementX;
+                int nouveauY = ennemi.Y + deplacementY;
+
+                if (nouveauX >= 0 && nouveauX < largeur && nouveauY >= 0 && nouveauY < hauteur && lab[nouveauY, nouveauX] == 0)
+                {
+                    ennemi.X = nouveauX;
+                    ennemi.Y = nouveauY;
+                    deplacementValide = true;
+                }
+            }
+        }
+    }
+
+    public class Ennemi
+    {
+        public int X { get; set; }
+        public int Y { get; set; }
+        public double Vitesse { get; set; }
+
+        public Ennemi(int x, int y, double vitesse)
+        {
+            X = x;
+            Y = y;
+            Vitesse = vitesse*2;
         }
     }
 }
