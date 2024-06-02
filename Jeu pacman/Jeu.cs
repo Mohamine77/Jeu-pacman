@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-
+ 
 namespace Jeu_pacman
 {
     public partial class Jeu : Form
