@@ -12,8 +12,8 @@ namespace Jeu_pacman
         public bool humain = true;
         private int compteurseconde = 0;
         private int JoueurVie = 3;
-        private const int largeur = 26; // largeur du labyrinthe
-        private const int hauteur = 19; // hauteur du labyrinthe
+        private const int largeur = 14; // largeur du labyrinthe
+        private const int hauteur = 10; // hauteur du labyrinthe
         private static int[,] lab = new int[hauteur, largeur]; // tableau qui représente le labyrinthe
         private int joueurX = 2; // position initiale du joueur (x)
         private int joueurY = 2; // position initiale du joueur (y)
@@ -61,11 +61,16 @@ namespace Jeu_pacman
         }
         private void GameOver()
     {
+            ResetPositions();
 
-        MessageBox.Show("Game Over! You've lost all your lives.");
+            MessageBox.Show("Game Over! You've lost all your lives.");
         ennemiTimer.Stop();
-        this.Close(); 
-    }
+            Main mainform = new Main();
+
+            mainform.Show();
+            JoueurVie = 3;
+            this.Hide();
+        }
 
 
         private void label2_Click(object sender, EventArgs e)
@@ -291,6 +296,9 @@ namespace Jeu_pacman
         {
             DeplacerEnnemi();
             this.panel1.Invalidate(); // Redessiner le panel
+            Collision();
+
+
         }
 
         private void DeplacerEnnemi()
@@ -324,6 +332,7 @@ namespace Jeu_pacman
                 {
 
                     GameOver();
+                    
                 }
                 else
                 {
