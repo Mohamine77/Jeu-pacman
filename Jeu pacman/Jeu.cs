@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
- 
+using System.Media;
+
 namespace Jeu_pacman
 {
     public partial class Jeu : Form
     {
         private static Random random = new Random();
-        private const int largeur = 52; // largeur du labyrinthe
-        private const int hauteur = 38; // hauteur du labyrinthe
+        public bool humain = true;
+        private int compteurseconde = 0;
+        private int JoueurVie = 3;
+        private const int largeur = 26; // largeur du labyrinthe
+        private const int hauteur = 19; // hauteur du labyrinthe
         private static int[,] lab = new int[hauteur, largeur]; // tableau qui représente le labyrinthe
         private int joueurX = 2; // position initiale du joueur (x)
         private int joueurY = 2; // position initiale du joueur (y)
@@ -18,7 +22,6 @@ namespace Jeu_pacman
         private Ennemi ennemi; // ennemi du jeu
         private System.Windows.Forms.Timer ennemiTimer; // Timer pour le déplacement de l'ennemi
         private bool premierDeplacement = false; // Indicateur pour le premier déplacement du joueur
-
         public Jeu()
         {
             InitializeComponent();
@@ -35,8 +38,8 @@ namespace Jeu_pacman
             this.panel1.Paint += new PaintEventHandler(panel1_Paint);
             this.panel1.Invalidate();
 
-            joueurImage = new Bitmap("C:\\Users\\Amine\\Desktop\\Jeu-pacman-master\\images\\jeu.png");
-            ennemiImage = new Bitmap("C:\\Users\\Amine\\Desktop\\Jeu-pacman-master\\images\\ennemi.png");
+            joueurImage = new Bitmap("C:\\Users\\jessy\\OneDrive\\Bureau\\Jeu-pacman-master\\images\\humain.png");
+            ennemiImage = new Bitmap("C:\\Users\\jessy\\OneDrive\\Bureau\\Jeu-pacman-master\\images\\ennemi.png");
 
             ennemi = new Ennemi(random.Next(largeur), random.Next(hauteur), 1.0);
 
@@ -56,6 +59,14 @@ namespace Jeu_pacman
             Main mainForm = new Main();
             mainForm.Show();
         }
+        private void GameOver()
+    {
+
+        MessageBox.Show("Game Over! You've lost all your lives.");
+        ennemiTimer.Stop();
+        this.Close(); 
+    }
+
 
         private void label2_Click(object sender, EventArgs e)
         {
@@ -79,6 +90,7 @@ namespace Jeu_pacman
             }
             CreerLab(2, 2); // commencer le labyrinthe à partir de la cellule (2, 2)
         }
+
 
         private void CreerLab(int x, int y)
         {
@@ -185,30 +197,79 @@ namespace Jeu_pacman
                     break;
             }
         }
+        public void bruitage()
+        {
+            SoundPlayer aouhh = new SoundPlayer();
+            aouhh.SoundLocation = "C:\\Users\\jessy\\OneDrive\\Bureau\\Jeu-pacman-master\\Jeu pacman\\bin\\Debug\\aou.wav";
+            aouhh.Play();
+
+
+        }
 
         private void Jeu_KeyDown(object sender, KeyEventArgs e)
         {
             int newX = joueurX;
             int newY = joueurY;
-
-            switch (e.KeyCode)
+            if (humain == true)
             {
-                case Keys.Z:
-                case Keys.Up:
-                    newY--; // Aller en haut    
-                    break;
-                case Keys.Q:
-                case Keys.Left:
-                    newX--; // Aller à gauche
-                    break;
-                case Keys.S:
-                case Keys.Down:
-                    newY++; // Aller en bas
-                    break;
-                case Keys.D:
-                case Keys.Right:
-                    newX++; // Aller à droite
-                    break;
+                switch (e.KeyCode)
+                {
+                    case Keys.Z:
+                    case Keys.Up:
+                        newY = newY - 1; // Aller en haut
+                        break;
+                    case Keys.Q:
+                    case Keys.Left:
+                        newX--; // Aller à gauche
+                        break;
+                    case Keys.S:
+                    case Keys.Down:
+                        newY++; // Aller en bas
+                        break;
+                    case Keys.D:
+                    case Keys.Right:
+                        newX++; // Aller à droite
+                        break;
+                }
+            }
+            else
+            {
+                switch (e.KeyCode)
+                {
+                    case Keys.Z:
+                    case Keys.Up:
+                        newY--; // Aller en haut
+                        if (lab[newY - 1, newX] == 0 && lab[newY, newX] == 0)
+                        {
+                            newY--;
+                        }
+                        break;
+                    case Keys.Q:
+                    case Keys.Left:
+                        newX--; // Aller à gauche
+                        if (lab[newY, newX - 1] == 0 && lab[newY, newX] == 0)
+                        {
+                            newX--;
+                        }
+                        break;
+                    case Keys.S:
+                    case Keys.Down:
+                        newY++; // Aller en bas
+                        if (lab[newY + 1, newX] == 0 && lab[newY, newX] == 0)
+                        {
+                            newY++;
+                        }
+                        break;
+                    case Keys.D:
+                    case Keys.Right:
+                        newX++; // Aller à droite
+                        if (lab[newY, newX + 1] == 0 && lab[newY, newX] == 0)
+                        {
+                            newX++;
+                        }
+                        break;
+                }
+
             }
 
             if (newX >= 0 && newX < largeur && newY >= 0 && newY < hauteur && lab[newY, newX] == 0)
@@ -222,6 +283,8 @@ namespace Jeu_pacman
                 premierDeplacement = true;
                 ennemiTimer.Start(); // Démarrer le Timer au premier déplacement du joueur
             }
+            Collision();
+
         }
 
         private void EnnemiTimer_Tick(object sender, EventArgs e)
@@ -245,9 +308,70 @@ namespace Jeu_pacman
                 {
                     ennemi.X = nouveauX;
                     ennemi.Y = nouveauY;
-                    deplacementValide = true;
+                    if (lab[ennemi.X, ennemi.Y] == 0)
+                    {
+                        deplacementValide = true;
+                    }
                 }
             }
+        }
+        private void Collision()
+        {
+            if (joueurX == ennemi.X && joueurY == ennemi.Y)
+            {
+                JoueurVie--;
+                if (JoueurVie <= 0)
+                {
+
+                    GameOver();
+                }
+                else
+                {
+                    ResetPositions();
+                }
+            }
+        }
+        private void ResetPositions()
+        {
+
+            joueurX = 2;
+            joueurY = 2;
+            this.panel1.Invalidate();
+        }
+
+
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void timer_JourNuit_Tick(object sender, EventArgs e)
+        {
+            compteurseconde++;
+
+            if (compteurseconde >= 30)
+            {
+
+                if (humain)
+                {
+                    humain = false;
+                    bruitage();
+                    joueurImage = new Bitmap("C:\\Users\\jessy\\OneDrive\\Bureau\\Jeu-pacman-master\\images\\loup.png");
+
+                }
+                else
+                {
+                    humain = true;
+                    joueurImage = new Bitmap("C:\\Users\\jessy\\OneDrive\\Bureau\\Jeu-pacman-master\\images\\humain.png");
+
+                }
+                compteurseconde = 0;
+            }
+
+            TimeSpan timeSpan = TimeSpan.FromSeconds(compteurseconde);
+            this.compteurr.Text = timeSpan.ToString(@"mm\:ss");
+
         }
     }
 
@@ -261,7 +385,8 @@ namespace Jeu_pacman
         {
             X = x;
             Y = y;
-            Vitesse = vitesse*2;
+            Vitesse = vitesse * 2;
         }
+       
     }
 }
