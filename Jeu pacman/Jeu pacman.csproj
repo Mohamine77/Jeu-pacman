@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ClassLibrary1\bibliotheque.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="Pause.cs">
       <SubType>Form</SubType>
     </Compile>

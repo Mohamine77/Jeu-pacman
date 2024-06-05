@@ -12,8 +12,8 @@ namespace Jeu_pacman
         public bool humain = true;
         private int compteurseconde = 0;
         private int JoueurVie = 3;
-        private const int largeur = 14; // largeur du labyrinthe
-        private const int hauteur = 10; // hauteur du labyrinthe
+        private const int largeur = 15; // largeur du labyrinthe
+        private const int hauteur = 15; // hauteur du labyrinthe
         private static int[,] lab = new int[hauteur, largeur]; // tableau qui représente le labyrinthe
         private int joueurX = 2; // position initiale du joueur (x)
         private int joueurY = 2; // position initiale du joueur (y)
@@ -38,10 +38,9 @@ namespace Jeu_pacman
             this.panel1.Paint += new PaintEventHandler(panel1_Paint);
             this.panel1.Invalidate();
 
-            joueurImage = new Bitmap("C:\\Users\\jessy\\OneDrive\\Bureau\\Jeu-pacman-master\\images\\humain.png");
-            ennemiImage = new Bitmap("C:\\Users\\jessy\\OneDrive\\Bureau\\Jeu-pacman-master\\images\\ennemi.png");
-
-            ennemi = new Ennemi(random.Next(largeur), random.Next(hauteur), 1.0);
+            joueurImage = new Bitmap("C:\\Users\\jessy\\OneDrive\\Bureau\\codegit\\images\\humain.png");
+            ennemiImage = new Bitmap("C:\\Users\\jessy\\OneDrive\\Bureau\\codegit\\images\\ennemi.png");
+            ennemi = new Ennemi(random.Next(largeur - 1), random.Next(hauteur), 1.0);
 
             ennemiTimer = new System.Windows.Forms.Timer();
             ennemiTimer.Interval = 500; // Intervalle en millisecondes (500ms = 0.5s)
@@ -60,11 +59,11 @@ namespace Jeu_pacman
             mainForm.Show();
         }
         private void GameOver()
-    {
+        {
             ResetPositions();
 
             MessageBox.Show("Game Over! You've lost all your lives.");
-        ennemiTimer.Stop();
+            ennemiTimer.Stop();
             Main mainform = new Main();
 
             mainform.Show();
@@ -80,8 +79,10 @@ namespace Jeu_pacman
 
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
+            panel1.SuspendLayout();
             DessinerLabyrinthe(e.Graphics);
             DessinerEnnemi(e.Graphics);
+            panel1.ResumeLayout();
         }
 
         private void GenerationLab()
@@ -186,8 +187,11 @@ namespace Jeu_pacman
 
         private void DessinerEnnemi(Graphics graphics)
         {
-            const int cellSize = 20; // taille de chaque cellule du labyrinthe
-            graphics.DrawImage(ennemiImage, ennemi.X * cellSize, ennemi.Y * cellSize, cellSize, cellSize);
+            if (ennemi != null)
+            {
+                const int cellSize = 20; // taille de chaque cellule du labyrinthe
+                graphics.DrawImage(ennemiImage, ennemi.X * cellSize, ennemi.Y * cellSize, cellSize, cellSize);
+            }
         }
 
         private void Jeu_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -205,7 +209,7 @@ namespace Jeu_pacman
         public void bruitage()
         {
             SoundPlayer aouhh = new SoundPlayer();
-            aouhh.SoundLocation = "C:\\Users\\jessy\\OneDrive\\Bureau\\Jeu-pacman-master\\Jeu pacman\\bin\\Debug\\aou.wav";
+            aouhh.SoundLocation = "C:\\Users\\jessy\\OneDrive\\Bureau\\codegit\\Jeu pacman\\bin\\Debug\\aou.wav";
             aouhh.Play();
 
 
@@ -295,7 +299,9 @@ namespace Jeu_pacman
         private void EnnemiTimer_Tick(object sender, EventArgs e)
         {
             DeplacerEnnemi();
+            panel1.SuspendLayout();
             this.panel1.Invalidate(); // Redessiner le panel
+            panel1.ResumeLayout(true);
             Collision();
 
 
@@ -314,38 +320,52 @@ namespace Jeu_pacman
 
                 if (nouveauX >= 0 && nouveauX < largeur && nouveauY >= 0 && nouveauY < hauteur && lab[nouveauY, nouveauX] == 0)
                 {
+
                     ennemi.X = nouveauX;
                     ennemi.Y = nouveauY;
-                    if (lab[ennemi.X, ennemi.Y] == 0)
-                    {
-                        deplacementValide = true;
-                    }
+                    deplacementValide = true;
+
                 }
             }
         }
         private void Collision()
         {
-            if (joueurX == ennemi.X && joueurY == ennemi.Y)
-            {
-                JoueurVie--;
-                if (JoueurVie <= 0)
+            if (ennemi != null)
+                if (joueurX == ennemi.X && joueurY == ennemi.Y && humain == true)
                 {
+                    JoueurVie--;
+                    SoundPlayer degats = new SoundPlayer();
+                    degats.SoundLocation = "C:\\Users\\jessy\\OneDrive\\Bureau\\codegit\\Jeu pacman\\bin\\Debug\\aie.wav";
+                    degats.Play();
+                    if (JoueurVie <= 0)
+                    {
 
-                    GameOver();
-                    
+                        GameOver();
+
+                    }
+                    else
+                    {
+                        ResetPositions();
+                    }
                 }
-                else
+                else if (joueurX == ennemi.X && joueurY == ennemi.Y && !humain)
                 {
-                    ResetPositions();
+                    ennemiTimer.Stop();
+                    ennemi = null;
+                    panel1.Invalidate();
+                    MessageBox.Show("Le loup a visiblement frappé ce soir");
+
+
                 }
-            }
         }
         private void ResetPositions()
         {
 
             joueurX = 2;
             joueurY = 2;
+            panel1.SuspendLayout();
             this.panel1.Invalidate();
+            panel1.ResumeLayout();
         }
 
 
@@ -366,13 +386,13 @@ namespace Jeu_pacman
                 {
                     humain = false;
                     bruitage();
-                    joueurImage = new Bitmap("C:\\Users\\jessy\\OneDrive\\Bureau\\Jeu-pacman-master\\images\\loup.png");
+                    joueurImage = new Bitmap("C:\\Users\\jessy\\OneDrive\\Bureau\\codegit\\images\\loup.png");
 
                 }
                 else
                 {
                     humain = true;
-                    joueurImage = new Bitmap("C:\\Users\\jessy\\OneDrive\\Bureau\\Jeu-pacman-master\\images\\humain.png");
+                    joueurImage = new Bitmap("C:\\Users\\jessy\\OneDrive\\Bureau\\codegit\\images\\humain.png");
 
                 }
                 compteurseconde = 0;
@@ -380,6 +400,11 @@ namespace Jeu_pacman
 
             TimeSpan timeSpan = TimeSpan.FromSeconds(compteurseconde);
             this.compteurr.Text = timeSpan.ToString(@"mm\:ss");
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
 
         }
     }
