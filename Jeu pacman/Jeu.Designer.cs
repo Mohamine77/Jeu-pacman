@@ -1,4 +1,6 @@
-﻿namespace Jeu_pacman
+﻿using System.Reflection;
+
+namespace Jeu_pacman
 {
     partial class Jeu
     {
@@ -55,6 +57,7 @@
             pictureBox1.Size = new Size(1954, 1102);
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
+            pictureBox1.Click += pictureBox1_Click;
             // 
             // button2
             // 
@@ -97,7 +100,7 @@
             // 
             // panel1
             // 
-            panel1.Location = new Point(328, 114);
+            panel1.Location = new Point(261, 100);
             panel1.Margin = new Padding(4);
             panel1.Name = "panel1";
             panel1.Size = new Size(1309, 951);
@@ -123,6 +126,7 @@
             pictureBox4.Margin = new Padding(4);
             pictureBox4.Name = "pictureBox4";
             pictureBox4.Size = new Size(121, 111);
+            pictureBox4.SizeMode = PictureBoxSizeMode.CenterImage;
             pictureBox4.TabIndex = 9;
             pictureBox4.TabStop = false;
             // 
@@ -163,6 +167,9 @@
             Controls.Add(compteurr);
             Controls.Add(pictureBox4);
             Controls.Add(pictureBox3);
+            typeof(Panel).InvokeMember("DoubleBuffered",
+    BindingFlags.SetProperty | BindingFlags.Instance | BindingFlags.NonPublic,
+    null, panel1, new object[] { true });
             Controls.Add(pictureBox2);
             Controls.Add(panel1);
             Controls.Add(label3);
@@ -172,6 +179,7 @@
             Margin = new Padding(4);
             Name = "Jeu";
             Text = "Form1";
+            FormClosing += Jeu_FormClosing;
             Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
