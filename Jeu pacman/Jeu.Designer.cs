@@ -195,7 +195,7 @@ namespace Jeu_pacman
         private Button button2;
         private Label label2;
         private Label label3;
-        private Panel panel1;
+        public Panel panel1;
         private PictureBox pictureBox3;
         private PictureBox pictureBox4;
         private PictureBox pictureBox2;

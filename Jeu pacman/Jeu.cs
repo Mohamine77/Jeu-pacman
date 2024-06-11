@@ -16,8 +16,8 @@ namespace Jeu_pacman
         public bool humain = true;
         private int compteurseconde = 0;
         private int JoueurVie = 3;
-        private const int largeur = 57; // largeur du labyrinthe
-        private const int hauteur = 34; // hauteur du labyrinthe
+        private const int largeur = 17; // largeur du labyrinthe
+        private const int hauteur = 14; // hauteur du labyrinthe
         private static int[,] lab = new int[hauteur, largeur]; // tableau qui représente le labyrinthe
         private int joueurX = 2; // position initiale du joueur (x)
         private int joueurY = 2; // position initiale du joueur (y)
@@ -25,15 +25,20 @@ namespace Jeu_pacman
         private Bitmap ennemiImage; // image de l'ennemi
         string hurlementloup = "C:\\Users\\jessy\\OneDrive\\Bureau\\codegit\\Jeu pacman\\bin\\Debug\\aou.wav";
         private Ennemi ennemi; // ennemi du jeu
+        private Ennemi shooter;
         private System.Windows.Forms.Timer ennemiTimer; // Timer pour le déplacement de l'ennemi
         private bool premierDeplacement = false; // Indicateur pour le premier déplacement du joueur
-        int[,] lob;
+        public static bool jeuEnPause = false; 
+        private int timerInterval;
+        public static Jeu instance;
         public Jeu()
         {
             InitializeComponent();
+            instance = this;
             Partiee.GenerationLab(hauteur, largeur, lab);
             Partiee.ConnectChemin(hauteur,largeur,lab);
             InitGameComponents();
+
         }
 
         private void InitGameComponents()
@@ -47,6 +52,7 @@ namespace Jeu_pacman
             joueurImage = new Bitmap("C:\\Users\\jessy\\OneDrive\\Bureau\\codegit\\images\\humain.png");
             ennemiImage = new Bitmap("C:\\Users\\jessy\\OneDrive\\Bureau\\codegit\\images\\ennemi.png");
             ennemi = new Ennemi(random.Next(largeur - 1), random.Next(hauteur), 1.0);
+            shooter = new Ennemi(random.Next(largeur), random.Next(hauteur), 1.0);
 
             ennemiTimer = new System.Windows.Forms.Timer();
             ennemiTimer.Interval = 500; // Intervalle en millisecondes (500ms = 0.5s)
@@ -60,15 +66,21 @@ namespace Jeu_pacman
 
         private void button2_Click(object sender, EventArgs e)
         {
-            this.Close();
-            Main mainForm = new Main();
-            mainForm.Show();
+            ennemiTimer.Stop();
+            timer_JourNuit.Stop();
+            this.Hide();
+
+            Pause pause = new Pause();
+            pause.Show();
         }
         private void GameOver()
         {
-            ResetPositions();
+            Partiee.ResetPositions(ref joueurX,ref joueurY);
+            this.panel1.Invalidate();
 
-            MessageBox.Show("Game Over! You've lost all your lives.");
+
+
+            MessageBox.Show("Game Over! le loup est mort ce soir...");
             ennemiTimer.Stop();
             Main mainform = new Main();
 
@@ -87,38 +99,14 @@ namespace Jeu_pacman
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
             
-            DessinerLabyrinthe(e.Graphics);
+            Partiee.DessinerLabyrinthe(e.Graphics,hauteur,largeur,lab,joueurImage,joueurX,joueurY);
          
-            DessinerEnnemi(e.Graphics);
-           
+            Partiee.DessinerEnnemi(e.Graphics,ennemi,ennemiImage);
+
+
+
         }
 
-        private void DessinerLabyrinthe(Graphics graphics)
-        {
-            const int cellSize = 20; // taille de chaque cellule du labyrinthe
-            Brush murBrush = Brushes.Black;
-            Brush cheminBrush = Brushes.White;
-
-            for (int y = 0; y < hauteur; y++)
-            {
-                for (int x = 0; x < largeur; x++)
-                {
-                    Brush brush = (lab[y, x] == 1) ? murBrush : cheminBrush;
-                    graphics.FillRectangle(brush, x * cellSize, y * cellSize, cellSize, cellSize);
-                }
-            }
-
-            graphics.DrawImage(joueurImage, joueurX * cellSize, joueurY * cellSize, cellSize, cellSize);
-        }
-
-        private void DessinerEnnemi(Graphics graphics)
-        {
-            if (ennemi != null)
-            {
-                const int cellSize = 20; // taille de chaque cellule du labyrinthe
-                graphics.DrawImage(ennemiImage, ennemi.X * cellSize, ennemi.Y * cellSize, cellSize, cellSize);
-            }
-        }
 
         private void Jeu_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
@@ -132,10 +120,50 @@ namespace Jeu_pacman
                     break;
             }
         }
-        
+        public void TogglePause()
+        {
+            jeuEnPause = !jeuEnPause;
+            Pause pause = new Pause();
+            if (jeuEnPause)
+            {
+                ennemiTimer.Stop();
+                timer_JourNuit.Stop();
+                this.Hide();
+
+                pause.Show();
+               
+            
+
+            }
+            else
+            {
+                Reprendre();
+                Pause.instancepause.Close();
+
+            }
+
+            panel1.Invalidate(); // Redessiner le panel pour afficher/marquer la pause
+        }
+        public void Reprendre()
+        {
+            jeuEnPause = false;
+            ennemiTimer.Start();
+            timer_JourNuit.Start();
+            this.Show();
+        }
 
         private void Jeu_KeyDown(object sender, KeyEventArgs e)
         {
+            if (e.KeyCode == Keys.Escape)
+            {
+                TogglePause();
+                return;
+            }
+
+            if (jeuEnPause)
+            {
+                return; // Ne pas traiter d'autres touches si le jeu est en pause
+            }
             int newX = joueurX;
             int newY = joueurY;
             if (humain == true)
@@ -219,12 +247,15 @@ namespace Jeu_pacman
 
         }
 
+
         private void EnnemiTimer_Tick(object sender, EventArgs e)
         {
-            Partiee.DeplacerEnnemi(ennemi,hauteur,largeur,lab);
-            this.panel1.Invalidate(); // Redessiner le panel
-            Collision();
-
+            if (!jeuEnPause)
+            {
+                Partiee.DeplacerEnnemi(ennemi, hauteur, largeur, lab);
+                this.panel1.Invalidate(); // Redessiner le panel
+                Collision();
+            }
 
         }
 
@@ -247,7 +278,10 @@ namespace Jeu_pacman
                     }
                     else
                     {
-                        ResetPositions();
+                        Partiee.ResetPositions(ref joueurX,ref joueurY);
+
+                        this.panel1.Invalidate();
+
                     }
                 }
                 else if (joueurX == ennemi.X && joueurY == ennemi.Y && !humain)
@@ -260,16 +294,7 @@ namespace Jeu_pacman
 
                 }
         }
-        private void ResetPositions()
-        {
-
-            joueurX = 2;
-            joueurY = 2;
-            this.panel1.Invalidate();
-        }
-
-
-
+     
         private void label1_Click(object sender, EventArgs e)
         {
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Media;
 using System.Text;
@@ -133,9 +134,8 @@ namespace ClassLibrary1
                 int nouveauX = ennemi.X + deplacementX;
                 int nouveauY = ennemi.Y + deplacementY;
 
-                if (nouveauX >= 0 && nouveauX < largeur && nouveauY >= 0 && nouveauY < hauteur && lab[nouveauY, nouveauX] == 0)
+                if (nouveauX >= 0 && nouveauX < largeur && nouveauY >= 0 && nouveauY < hauteur && lab[nouveauY, nouveauX] == 0 && (nouveauX!=ennemi.X||nouveauY!=ennemi.Y))
                 {
-
                     ennemi.X = nouveauX;
                     ennemi.Y = nouveauY;
                     deplacementValide = true;
@@ -143,6 +143,41 @@ namespace ClassLibrary1
                 }
             }
         }
+    
+        public static void DessinerEnnemi(Graphics graphics,Ennemi ennemi,Bitmap ennemiImage)
+        {
+            if (ennemi != null)
+            {
+                const int cellSize = 20; // taille de chaque cellule du labyrinthe
+                graphics.DrawImage(ennemiImage, ennemi.X * cellSize, ennemi.Y * cellSize, cellSize, cellSize);
+            }
+        }
+       public static void DessinerLabyrinthe(Graphics graphics,int hauteur,int largeur,int[,]lab,Bitmap joueurImage,int joueurX,int joueurY)
+        {
+            const int cellSize = 20; // taille de chaque cellule du labyrinthe
+            Brush murBrush = Brushes.Black;
+            Brush cheminBrush = Brushes.White;
+
+            for (int y = 0; y < hauteur; y++)
+            {
+                for (int x = 0; x < largeur; x++)
+                {
+                    Brush brush = (lab[y, x] == 1) ? murBrush : cheminBrush;
+                    graphics.FillRectangle(brush, x * cellSize, y * cellSize, cellSize, cellSize);
+                }
+            }
+
+            graphics.DrawImage(joueurImage, joueurX * cellSize, joueurY * cellSize, cellSize, cellSize);
+        }
+        public static void ResetPositions(ref int joueurX,ref int joueurY)
+        {
+
+            joueurX = 2;
+            joueurY = 2;
+
+        }
+
+
     }
     public class Ennemi
     {
