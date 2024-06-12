@@ -16,16 +16,20 @@ namespace Jeu_pacman
         public bool humain = true;
         private int compteurseconde = 0;
         private int JoueurVie = 3;
-        private const int largeur = 17; // largeur du labyrinthe
-        private const int hauteur = 14; // hauteur du labyrinthe
+        private const int largeur = 10; // largeur du labyrinthe
+        private const int hauteur = 10; // hauteur du labyrinthe
         private static int[,] lab = new int[hauteur, largeur]; // tableau qui représente le labyrinthe
         private int joueurX = 2; // position initiale du joueur (x)
         private int joueurY = 2; // position initiale du joueur (y)
         private Bitmap joueurImage; // image du joueur
         private Bitmap ennemiImage; // image de l'ennemi
+        private Bitmap potionImage; // image de l'ennemi
+        private Potion potion = new Potion();
+        
         string hurlementloup = "C:\\Users\\jessy\\OneDrive\\Bureau\\codegit\\Jeu pacman\\bin\\Debug\\aou.wav";
         private Ennemi ennemi; // ennemi du jeu
         private Ennemi shooter;
+        private Potion Potion;
         private System.Windows.Forms.Timer ennemiTimer; // Timer pour le déplacement de l'ennemi
         private bool premierDeplacement = false; // Indicateur pour le premier déplacement du joueur
         public static bool jeuEnPause = false; 
@@ -35,9 +39,14 @@ namespace Jeu_pacman
         {
             InitializeComponent();
             instance = this;
+            JoueurVie = 3;
+
             Partiee.GenerationLab(hauteur, largeur, lab);
             Partiee.ConnectChemin(hauteur,largeur,lab);
+
             InitGameComponents();
+            potion.Initialiser(hauteur, largeur, lab, joueurX, joueurY);
+
 
         }
 
@@ -51,6 +60,7 @@ namespace Jeu_pacman
 
             joueurImage = new Bitmap("C:\\Users\\jessy\\OneDrive\\Bureau\\codegit\\images\\humain.png");
             ennemiImage = new Bitmap("C:\\Users\\jessy\\OneDrive\\Bureau\\codegit\\images\\ennemi.png");
+            potionImage = new Bitmap("C:\\Users\\jessy\\OneDrive\\Bureau\\codegit\\images\\potion.png");
             ennemi = new Ennemi(random.Next(largeur - 1), random.Next(hauteur), 1.0);
             shooter = new Ennemi(random.Next(largeur), random.Next(hauteur), 1.0);
 
@@ -85,7 +95,6 @@ namespace Jeu_pacman
             Main mainform = new Main();
 
             mainform.Show();
-            JoueurVie = 3;
             this.Hide();
         }
 
@@ -100,7 +109,7 @@ namespace Jeu_pacman
         {
             
             Partiee.DessinerLabyrinthe(e.Graphics,hauteur,largeur,lab,joueurImage,joueurX,joueurY);
-         
+            Partiee.DessinerPotion(e.Graphics, potion, potionImage, 20);
             Partiee.DessinerEnnemi(e.Graphics,ennemi,ennemiImage);
 
 
@@ -307,7 +316,7 @@ namespace Jeu_pacman
             if (compteurseconde >= 30)
             {
 
-                if (humain)
+                if (humain&&JoueurVie!=0)
                 {
                     humain = false;
                     Partiee.bruitage(hurlementloup);

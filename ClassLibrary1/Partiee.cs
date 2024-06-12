@@ -152,7 +152,32 @@ namespace ClassLibrary1
                 graphics.DrawImage(ennemiImage, ennemi.X * cellSize, ennemi.Y * cellSize, cellSize, cellSize);
             }
         }
-       public static void DessinerLabyrinthe(Graphics graphics,int hauteur,int largeur,int[,]lab,Bitmap joueurImage,int joueurX,int joueurY)
+        public static void DessinerPotion(Graphics graphics, Potion potion, Bitmap ennemiImage, int hauteur, int largeur, int[,] lab, int joueurx, int joueury)
+        {
+           
+                int emplacementX = 0;
+                int emplacementY = 0;
+                const int cellSize = 20; // taille de chaque cellule du labyrinthe
+                Random random = new Random();
+
+                // Trouver un emplacement valide pour la potion
+                bool emplacementTrouve = false;
+                while (!emplacementTrouve)
+                {
+                    emplacementX = random.Next(2, largeur);
+                    emplacementY = random.Next(2, hauteur);
+
+                    if (lab[emplacementY, emplacementX] == 0 && (emplacementX != joueurx || emplacementY != joueury))
+                    {
+                        emplacementTrouve = true;
+                    }
+                }
+
+                // Dessiner l'image de la potion à l'emplacement trouvé
+                graphics.DrawImage(ennemiImage, emplacementX * cellSize, emplacementY * cellSize, cellSize, cellSize);
+            
+        }
+        public static void DessinerLabyrinthe(Graphics graphics,int hauteur,int largeur,int[,]lab,Bitmap joueurImage,int joueurX,int joueurY)
         {
             const int cellSize = 20; // taille de chaque cellule du labyrinthe
             Brush murBrush = Brushes.Black;
@@ -176,6 +201,14 @@ namespace ClassLibrary1
             joueurY = 2;
 
         }
+        public static void DessinerPotion(Graphics graphics, Potion potion, Bitmap potionImage, int cellSize)
+        {
+            if (potion != null)
+            {
+                // Dessiner l'image de la potion à l'emplacement stocké
+                graphics.DrawImage(potionImage, potion.EmplacementX * cellSize, potion.EmplacementY * cellSize, cellSize, cellSize);
+            }
+        }
 
 
     }
@@ -192,5 +225,29 @@ namespace ClassLibrary1
             Vitesse = vitesse * 2;
         }
 
+    }
+    public class Potion
+    {
+        public int EmplacementX { get; set; }
+        public int EmplacementY { get; set; }
+
+        public void Initialiser(int hauteur, int largeur, int[,] lab, int joueurx, int joueury)
+        {
+            Random random = new Random();
+            bool emplacementTrouve = false;
+
+            while (!emplacementTrouve)
+            {
+                int x = random.Next(2, largeur);
+                int y = random.Next(2, hauteur);
+
+                if (lab[y, x] == 0 && (x != joueurx || y != joueury))
+                {
+                    EmplacementX = x;
+                    EmplacementY = y;
+                    emplacementTrouve = true;
+                }
+            }
+        }
     }
 }

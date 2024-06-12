@@ -5,9 +5,16 @@ namespace Jeu_pacman
 {
     public partial class Main : Form
     {
+        public static Main menu { get; private set; }
+
         public Main()
         {
             InitializeComponent();
+            menu = this;
+        }
+        public void ShowMenu()
+        {
+            this.Show();
         }
 
         private void button4_Click(object sender, EventArgs e)
