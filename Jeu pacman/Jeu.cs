@@ -16,8 +16,8 @@ namespace Jeu_pacman
         public bool humain = true;
         private int compteurseconde = 0;
         private int JoueurVie = 3;
-        private const int largeur = 10; // largeur du labyrinthe
-        private const int hauteur = 10; // hauteur du labyrinthe
+        private const int largeur = 40; // largeur du labyrinthe
+        private const int hauteur = 30; // hauteur du labyrinthe
         private static int[,] lab = new int[hauteur, largeur]; // tableau qui représente le labyrinthe
         private int joueurX = 2; // position initiale du joueur (x)
         private int joueurY = 2; // position initiale du joueur (y)
@@ -47,7 +47,7 @@ namespace Jeu_pacman
             InitGameComponents();
             potion.Initialiser(hauteur, largeur, lab, joueurX, joueurY);
 
-
+            pictureBox3.Parent = pictureBox1;
         }
 
         private void InitGameComponents()
@@ -276,6 +276,8 @@ namespace Jeu_pacman
                 if (joueurX == ennemi.X && joueurY == ennemi.Y && humain == true)
                 {
                     JoueurVie--;
+                    pictureBox2.Visible = false;
+
                     SoundPlayer degats = new SoundPlayer();
                     degats.SoundLocation = "C:\\Users\\jessy\\OneDrive\\Bureau\\codegit\\Jeu pacman\\bin\\Debug\\aie.wav";
                     degats.Play();

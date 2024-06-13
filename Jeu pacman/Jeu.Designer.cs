@@ -109,7 +109,7 @@ namespace Jeu_pacman
             // 
             // pictureBox3
             // 
-            pictureBox3.BackColor = SystemColors.ScrollBar;
+            pictureBox3.BackColor = Color.Transparent;
             pictureBox3.Image = (Image)resources.GetObject("pictureBox3.Image");
             pictureBox3.Location = new Point(132, 22);
             pictureBox3.Margin = new Padding(4);
@@ -167,9 +167,6 @@ namespace Jeu_pacman
             Controls.Add(compteurr);
             Controls.Add(pictureBox4);
             Controls.Add(pictureBox3);
-            typeof(Panel).InvokeMember("DoubleBuffered",
-    BindingFlags.SetProperty | BindingFlags.Instance | BindingFlags.NonPublic,
-    null, panel1, new object[] { true });
             Controls.Add(pictureBox2);
             Controls.Add(panel1);
             Controls.Add(label3);
