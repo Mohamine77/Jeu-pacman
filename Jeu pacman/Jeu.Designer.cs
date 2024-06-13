@@ -105,6 +105,9 @@ namespace Jeu_pacman
             panel1.Name = "panel1";
             panel1.Size = new Size(1309, 951);
             panel1.TabIndex = 6;
+            typeof(Panel).InvokeMember("DoubleBuffered",
+   BindingFlags.SetProperty | BindingFlags.Instance | BindingFlags.NonPublic,
+   null, panel1, new object[] { true });
             panel1.Paint += panel1_Paint;
             // 
             // pictureBox3
@@ -144,7 +147,7 @@ namespace Jeu_pacman
             // compteurr
             // 
             compteurr.AutoSize = true;
-            compteurr.BackColor = Color.ForestGreen;
+            compteurr.BackColor = Color.Transparent;
             compteurr.Font = new Font("Showcard Gothic", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
             compteurr.Location = new Point(45, 245);
             compteurr.MinimumSize = new Size(159, 79);

@@ -47,7 +47,8 @@ namespace Jeu_pacman
             InitGameComponents();
             potion.Initialiser(hauteur, largeur, lab, joueurX, joueurY);
 
-            pictureBox3.Parent = pictureBox1;
+
+           
         }
 
         private void InitGameComponents()
