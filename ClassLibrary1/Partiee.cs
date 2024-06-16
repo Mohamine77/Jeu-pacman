@@ -5,86 +5,88 @@ using System.Linq;
 using System.Media;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Windows.Forms;
+using static ClassLibrary1.Partiee;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 namespace ClassLibrary1
 {
-  
-        public class Partiee
-        {
-            private static Random random = new Random();
 
-            public static void GenerationLab(int hauteur, int largeur, int[,] lab)
+    public class Partiee
+    {
+        private static Random random = new Random();
+
+        public static void GenerationLab(int hauteur, int largeur, int[,] lab)
+        {
+            for (int i = 0; i < hauteur; i++)
             {
-                for (int i = 0; i < hauteur; i++)
+                for (int j = 0; j < largeur; j++)
                 {
-                    for (int j = 0; j < largeur; j++)
-                    {
-                        lab[i, j] = 1; // remplir toutes les cellules avec un mur
-                    }
+                    lab[i, j] = 1; // remplir toutes les cellules avec un mur
                 }
-                CreerLab(2, 2, hauteur, largeur, lab); // commencer le labyrinthe à partir de la cellule (2, 2)
             }
-            public static void CreerLab(int x, int y, int hauteur, int largeur, int[,] lab)
-            {
-                lab[y, x] = 0; // dire que cette cellule est visitée
-                List<Tuple<int, int>> directions = new List<Tuple<int, int>>()
+            CreerLab(2, 2, hauteur, largeur, lab); // commencer le labyrinthe à partir de la cellule (2, 2)
+        }
+        public static void CreerLab(int x, int y, int hauteur, int largeur, int[,] lab)
+        {
+            lab[y, x] = 0; // dire que cette cellule est visitée
+            List<Tuple<int, int>> directions = new List<Tuple<int, int>>()
             {
                 Tuple.Create(1, 0), Tuple.Create(-1, 0), Tuple.Create(0, 1), Tuple.Create(0, -1)
             };
-                directions = Shuffle(directions); // mélanger les directions pour explorer aléatoirement
+            directions = Shuffle(directions); // mélanger les directions pour explorer aléatoirement
 
-                foreach (var direction in directions)
-                {
-                    int dx = direction.Item1;
-                    int dy = direction.Item2;
-                    int nx = x + 2 * dx;
-                    int ny = y + 2 * dy;
-
-                    if (nx > 0 && nx < largeur && ny > 0 && ny < hauteur && lab[ny, nx] == 1)
-                    {
-                        lab[y + dy, x + dx] = 0;
-                        CreerLab(nx, ny, hauteur, largeur, lab);
-                    }
-                }
-            }
-            public static List<T> Shuffle<T>(List<T> list)
+            foreach (var direction in directions)
             {
-                int n = list.Count;
-                while (n > 1)
+                int dx = direction.Item1;
+                int dy = direction.Item2;
+                int nx = x + 2 * dx;
+                int ny = y + 2 * dy;
+
+                if (nx > 0 && nx < largeur && ny > 0 && ny < hauteur && lab[ny, nx] == 1)
                 {
-                    n--;
-                    int k = random.Next(n + 1);
-                    T value = list[k];
-                    list[k] = list[n];
-                    list[n] = value;
+                    lab[y + dy, x + dx] = 0;
+                    CreerLab(nx, ny, hauteur, largeur, lab);
                 }
-                return list;
             }
-    
+        }
+        public static List<T> Shuffle<T>(List<T> list)
+        {
+            int n = list.Count;
+            while (n > 1)
+            {
+                n--;
+                int k = random.Next(n + 1);
+                T value = list[k];
+                list[k] = list[n];
+                list[n] = value;
+            }
+            return list;
+        }
+
 
         private void CreerLab(int x, int y, int[,] lab, int hauteur, int largeur)
-            {
-                lab[y, x] = 0; // dire que cette cellule est visitée
-                List<Tuple<int, int>> directions = new List<Tuple<int, int>>()
+        {
+            lab[y, x] = 0; // dire que cette cellule est visitée
+            List<Tuple<int, int>> directions = new List<Tuple<int, int>>()
             {
                 Tuple.Create(1, 0), Tuple.Create(-1, 0), Tuple.Create(0, 1), Tuple.Create(0, -1)
             };
-                directions = Shuffle(directions); // mélanger les directions pour explorer aléatoirement
+            directions = Shuffle(directions); // mélanger les directions pour explorer aléatoirement
 
-                foreach (var direction in directions)
+            foreach (var direction in directions)
+            {
+                int dx = direction.Item1;
+                int dy = direction.Item2;
+                int nx = x + 2 * dx;
+                int ny = y + 2 * dy;
+
+                if (nx > 0 && nx < largeur && ny > 0 && ny < hauteur && lab[ny, nx] == 1)
                 {
-                    int dx = direction.Item1;
-                    int dy = direction.Item2;
-                    int nx = x + 2 * dx;
-                    int ny = y + 2 * dy;
-
-                    if (nx > 0 && nx < largeur && ny > 0 && ny < hauteur && lab[ny, nx] == 1)
-                    {
-                        lab[y + dy, x + dx] = 0;
-                        CreerLab(nx, ny, hauteur, largeur, lab);
-                    }
+                    lab[y + dy, x + dx] = 0;
+                    CreerLab(nx, ny, hauteur, largeur, lab);
                 }
             }
+        }
         public static void bruitage(string locationsong)
         {
             SoundPlayer aouhh = new SoundPlayer();
@@ -93,7 +95,7 @@ namespace ClassLibrary1
 
 
         }
-        public static List<Tuple<int, int>> TrouveVoisins(int x, int y,int largeur,int hauteur,int [,]lab)
+        public static List<Tuple<int, int>> TrouveVoisins(int x, int y, int largeur, int hauteur, int[,] lab)
         {
             List<Tuple<int, int>> voisins = new List<Tuple<int, int>>();
             if (x > 1 && lab[y, x - 2] == 0) voisins.Add(Tuple.Create(x - 2, y));
@@ -102,7 +104,7 @@ namespace ClassLibrary1
             if (y < hauteur - 2 && lab[y + 2, x] == 0) voisins.Add(Tuple.Create(x, y + 2));
             return voisins;
         }
-       public static void ConnectChemin(int hauteur,int largeur,int[,]lab)
+        public static void ConnectChemin(int hauteur, int largeur, int[,] lab)
         {
             for (int y = 1; y < hauteur; y += 2)
             {
@@ -122,8 +124,8 @@ namespace ClassLibrary1
                 }
             }
         }
-
-        public static void DeplacerEnnemi(Ennemi ennemi,int hauteur,int largeur,int[,]lab)
+        //déplacement de l'ennemi de manière général sans implémentation de système de difficulté
+        public static void DeplacerEnnemi(Ennemi ennemi, int hauteur, int largeur, int[,] lab)
         {
             bool deplacementValide = false;
             while (!deplacementValide)
@@ -134,7 +136,7 @@ namespace ClassLibrary1
                 int nouveauX = ennemi.X + deplacementX;
                 int nouveauY = ennemi.Y + deplacementY;
 
-                if (nouveauX >= 0 && nouveauX < largeur && nouveauY >= 0 && nouveauY < hauteur && lab[nouveauY, nouveauX] == 0 && (nouveauX!=ennemi.X||nouveauY!=ennemi.Y))
+                if (nouveauX >= 0 && nouveauX < largeur && nouveauY >= 0 && nouveauY < hauteur && lab[nouveauY, nouveauX] == 0 && (nouveauX != ennemi.X || nouveauY != ennemi.Y))
                 {
                     ennemi.X = nouveauX;
                     ennemi.Y = nouveauY;
@@ -143,8 +145,12 @@ namespace ClassLibrary1
                 }
             }
         }
-    
-        public static void DessinerEnnemi(Graphics graphics,Ennemi ennemi,Bitmap ennemiImage)
+        public static void degats()
+        {
+
+        }
+
+        public static void DessinerEnnemi(Graphics graphics, Ennemi ennemi, Bitmap ennemiImage)
         {
             if (ennemi != null)
             {
@@ -154,30 +160,30 @@ namespace ClassLibrary1
         }
         public static void DessinerPotion(Graphics graphics, Potion potion, Bitmap ennemiImage, int hauteur, int largeur, int[,] lab, int joueurx, int joueury)
         {
-           
-                int emplacementX = 0;
-                int emplacementY = 0;
-                const int cellSize = 20; // taille de chaque cellule du labyrinthe
-                Random random = new Random();
 
-                // Trouver un emplacement valide pour la potion
-                bool emplacementTrouve = false;
-                while (!emplacementTrouve)
+            int emplacementX = 0;
+            int emplacementY = 0;
+            const int cellSize = 20; // taille de chaque cellule du labyrinthe
+            Random random = new Random();
+
+            // Trouver un emplacement valide pour la potion
+            bool emplacementTrouve = false;
+            while (!emplacementTrouve)
+            {
+                emplacementX = random.Next(2, largeur);
+                emplacementY = random.Next(2, hauteur);
+
+                if (lab[emplacementY, emplacementX] == 0 && (emplacementX != joueurx || emplacementY != joueury))
                 {
-                    emplacementX = random.Next(2, largeur);
-                    emplacementY = random.Next(2, hauteur);
-
-                    if (lab[emplacementY, emplacementX] == 0 && (emplacementX != joueurx || emplacementY != joueury))
-                    {
-                        emplacementTrouve = true;
-                    }
+                    emplacementTrouve = true;
                 }
+            }
 
-                // Dessiner l'image de la potion à l'emplacement trouvé
-                graphics.DrawImage(ennemiImage, emplacementX * cellSize, emplacementY * cellSize, cellSize, cellSize);
-            
+            // Dessiner l'image de la potion à l'emplacement trouvé
+            graphics.DrawImage(ennemiImage, emplacementX * cellSize, emplacementY * cellSize, cellSize, cellSize);
+
         }
-        public static void DessinerLabyrinthe(Graphics graphics,int hauteur,int largeur,int[,]lab,Bitmap joueurImage,int joueurX,int joueurY)
+        public static void DessinerLabyrinthe(Graphics graphics, int hauteur, int largeur, int[,] lab, Bitmap joueurImage, int joueurX, int joueurY)
         {
             const int cellSize = 20; // taille de chaque cellule du labyrinthe
             Brush murBrush = Brushes.Black;
@@ -194,7 +200,7 @@ namespace ClassLibrary1
 
             graphics.DrawImage(joueurImage, joueurX * cellSize, joueurY * cellSize, cellSize, cellSize);
         }
-        public static void ResetPositions(ref int joueurX,ref int joueurY)
+        public static void ResetPositions(ref int joueurX, ref int joueurY)
         {
 
             joueurX = 2;
@@ -209,43 +215,109 @@ namespace ClassLibrary1
                 graphics.DrawImage(potionImage, potion.EmplacementX * cellSize, potion.EmplacementY * cellSize, cellSize, cellSize);
             }
         }
-
-
-    }
-    public class Ennemi
-    {
-        public int X { get; set; }
-        public int Y { get; set; }
-        public double Vitesse { get; set; }
-
-        public Ennemi(int x, int y, double vitesse)
+        public static void Nextlvl(int hauteur,int largeur, int [,] lab,int joueurX,int joueurY,Potion potion,Ennemi ennemi,Ennemi shooter,Timer ennemiTimer,Panel panel1)
         {
-            X = x;
-            Y = y;
-            Vitesse = vitesse * 2;
+            // Réinitialiser le labyrinthe
+            Partiee.GenerationLab(hauteur, largeur, lab);
+            Partiee.ConnectChemin(hauteur, largeur, lab);
+
+            // Réinitialiser les positions du joueur et de l'ennemi
+            Partiee.ResetPositions(ref joueurX, ref joueurY);
+            ennemi = new Ennemi(random.Next(largeur - 1), random.Next(hauteur), 1.0);
+            shooter = new Ennemi(random.Next(largeur), random.Next(hauteur), 1.0);
+
+            // Réinitialiser les potions
+            potion.Initialiser(hauteur, largeur, lab, joueurX, joueurY);
+
+            // Redémarrer le timer de l'ennemi
+            ennemiTimer.Start();
+
+            // Redessiner le panneau
+            panel1.Invalidate();
+        }
+        public static Ennemi GenererEnnemiValide(int hauteur,int largeur,int[,] lab)
+        {
+            int x, y;
+            do
+            {
+                x = random.Next(largeur);
+                y = random.Next(hauteur);
+            }
+            while (lab[y, x] != 0); // Répétez jusqu'à ce que l'on trouve une position valide (non mur)
+
+            return new Ennemi(x, y, 1.0);
+        }
+        public static void Collision(int joueurX, int joueurY, Ennemi ennemi, bool humain, int JoueurVie, PictureBox coeur3, Form jeu, Panel panel1, Timer ennemiTimer, string sonmort, string MsgGameOver)
+        {
+            if (ennemi != null)
+                if (joueurX == ennemi.X && joueurY == ennemi.Y && humain == true)
+                {
+                    JoueurVie--;
+                    coeur3.Visible = false;
+
+                    SoundPlayer degats = new SoundPlayer();
+                    degats.SoundLocation = "C:\\Users\\jessy\\Desktop\\codegit\\Jeu pacman\\bin\\Debug\\aie.wav";
+                    degats.Play();
+                    if (JoueurVie <= 0)
+                    {
+
+                        MessageBox.Show(MsgGameOver);
+                        ennemiTimer.Stop();
+                    }
+                    else
+                    {
+                        Partiee.ResetPositions(ref joueurX, ref joueurY);
+
+                        panel1.Invalidate();
+
+                    }
+                }
+                else if (joueurX == ennemi.X && joueurY == ennemi.Y && !humain)
+                {
+                    ennemiTimer.Stop();
+                    ennemi = null;
+                    panel1.Invalidate();
+                    MessageBox.Show("Le loup a visiblement frappé ce soir");
+
+
+                }
         }
 
-    }
-    public class Potion
-    {
-        public int EmplacementX { get; set; }
-        public int EmplacementY { get; set; }
-
-        public void Initialiser(int hauteur, int largeur, int[,] lab, int joueurx, int joueury)
+        public class Ennemi
         {
-            Random random = new Random();
-            bool emplacementTrouve = false;
+            public int X { get; set; }
+            public int Y { get; set; }
+            public double Vitesse { get; set; }
 
-            while (!emplacementTrouve)
+            public Ennemi(int x, int y, double vitesse)
             {
-                int x = random.Next(2, largeur);
-                int y = random.Next(2, hauteur);
+                X = x;
+                Y = y;
+                Vitesse = vitesse * 2;
+            }
 
-                if (lab[y, x] == 0 && (x != joueurx || y != joueury))
+        }
+        public class Potion
+        {
+            public int EmplacementX { get; set; }
+            public int EmplacementY { get; set; }
+
+            public void Initialiser(int hauteur, int largeur, int[,] lab, int joueurx, int joueury)
+            {
+                Random random = new Random();
+                bool emplacementTrouve = false;
+
+                while (!emplacementTrouve)
                 {
-                    EmplacementX = x;
-                    EmplacementY = y;
-                    emplacementTrouve = true;
+                    int x = random.Next(2, largeur);
+                    int y = random.Next(2, hauteur);
+
+                    if (lab[y, x] == 0 && (x != joueurx || y != joueury))
+                    {
+                        EmplacementX = x;
+                        EmplacementY = y;
+                        emplacementTrouve = true;
+                    }
                 }
             }
         }

@@ -11,6 +11,7 @@ namespace Jeu_pacman
         {
             InitializeComponent();
             menu = this;
+            lblMeilleurepartie.Parent = fondmenu;
         }
         public void ShowMenu()
         {
@@ -56,6 +57,11 @@ namespace Jeu_pacman
             Jeu secondWindow = new Jeu();
             secondWindow.Show();
             this.Hide();
+        }
+
+        private void Main_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            this.Close();
         }
     }
 }

@@ -5,19 +5,20 @@ using System.Windows.Forms;
 using System.Media;
 using ClassLibrary1;
 using System.Runtime.CompilerServices;
+using static ClassLibrary1.Partiee;
 
 namespace Jeu_pacman
 {
     public partial class Jeu : Form
 
     {
-        
+
         private static Random random = new Random();
         public bool humain = true;
         private int compteurseconde = 0;
         private int JoueurVie = 3;
-        private const int largeur = 40; // largeur du labyrinthe
-        private const int hauteur = 30; // hauteur du labyrinthe
+        private const int largeur = 10; // largeur du labyrinthe
+        private const int hauteur = 8; // hauteur du labyrinthe
         private static int[,] lab = new int[hauteur, largeur]; // tableau qui représente le labyrinthe
         private int joueurX = 2; // position initiale du joueur (x)
         private int joueurY = 2; // position initiale du joueur (y)
@@ -25,30 +26,35 @@ namespace Jeu_pacman
         private Bitmap ennemiImage; // image de l'ennemi
         private Bitmap potionImage; // image de l'ennemi
         private Potion potion = new Potion();
-        
-        string hurlementloup = "C:\\Users\\jessy\\OneDrive\\Bureau\\codegit\\Jeu pacman\\bin\\Debug\\aou.wav";
+       
+        string hurlementloup = "C:\\Users\\jessy\\Desktop\\codegit\\Jeu pacman\\bin\\Debug\\aou.wav";
         private Ennemi ennemi; // ennemi du jeu
         private Ennemi shooter;
         private Potion Potion;
         private System.Windows.Forms.Timer ennemiTimer; // Timer pour le déplacement de l'ennemi
         private bool premierDeplacement = false; // Indicateur pour le premier déplacement du joueur
-        public static bool jeuEnPause = false; 
+        public static bool jeuEnPause = false;
         private int timerInterval;
         public static Jeu instance;
+        private int difficulte;
         public Jeu()
         {
             InitializeComponent();
             instance = this;
             JoueurVie = 3;
+            coeur1.Parent = fond;
+            coeur2.Parent = fond;
+            coeur3.Parent = fond;
+            compteurr.Parent = fond;
 
             Partiee.GenerationLab(hauteur, largeur, lab);
-            Partiee.ConnectChemin(hauteur,largeur,lab);
+            Partiee.ConnectChemin(hauteur, largeur, lab);
 
             InitGameComponents();
             potion.Initialiser(hauteur, largeur, lab, joueurX, joueurY);
 
 
-           
+
         }
 
         private void InitGameComponents()
@@ -59,10 +65,10 @@ namespace Jeu_pacman
             this.panel1.Paint += new PaintEventHandler(panel1_Paint);
             this.panel1.Invalidate();
 
-            joueurImage = new Bitmap("C:\\Users\\jessy\\OneDrive\\Bureau\\codegit\\images\\humain.png");
-            ennemiImage = new Bitmap("C:\\Users\\jessy\\OneDrive\\Bureau\\codegit\\images\\ennemi.png");
-            potionImage = new Bitmap("C:\\Users\\jessy\\OneDrive\\Bureau\\codegit\\images\\potion.png");
-            ennemi = new Ennemi(random.Next(largeur - 1), random.Next(hauteur), 1.0);
+            joueurImage = new Bitmap("C:\\Users\\jessy\\Desktop\\codegit\\images\\humain.png");
+            ennemiImage = new Bitmap("C:\\Users\\jessy\\Desktop\\codegit\\images\\ennemi.png");
+            potionImage = new Bitmap("C:\\Users\\jessy\\Desktop\\codegit\\images\\potion.png");
+            ennemi = Partiee.GenererEnnemiValide(hauteur,largeur,lab);
             shooter = new Ennemi(random.Next(largeur), random.Next(hauteur), 1.0);
 
             ennemiTimer = new System.Windows.Forms.Timer();
@@ -86,7 +92,7 @@ namespace Jeu_pacman
         }
         private void GameOver()
         {
-            Partiee.ResetPositions(ref joueurX,ref joueurY);
+            Partiee.ResetPositions(ref joueurX, ref joueurY);
             this.panel1.Invalidate();
 
 
@@ -108,10 +114,10 @@ namespace Jeu_pacman
 
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
-            
-            Partiee.DessinerLabyrinthe(e.Graphics,hauteur,largeur,lab,joueurImage,joueurX,joueurY);
+
+            Partiee.DessinerLabyrinthe(e.Graphics, hauteur, largeur, lab, joueurImage, joueurX, joueurY);
             Partiee.DessinerPotion(e.Graphics, potion, potionImage, 20);
-            Partiee.DessinerEnnemi(e.Graphics,ennemi,ennemiImage);
+            Partiee.DessinerEnnemi(e.Graphics, ennemi, ennemiImage);
 
 
 
@@ -141,8 +147,8 @@ namespace Jeu_pacman
                 this.Hide();
 
                 pause.Show();
-               
-            
+
+
 
             }
             else
@@ -205,7 +211,7 @@ namespace Jeu_pacman
                     case Keys.Z:
                     case Keys.Up:
                         newY--; // Aller en haut
-                        if (lab[newY - 1, newX] == 0 && lab[newY, newX] == 0)
+                        if (newY - 1 >= 0 && lab[newY - 1, newX] == 0 && lab[newY, newX] == 0)
                         {
                             newY--;
                         }
@@ -213,7 +219,7 @@ namespace Jeu_pacman
                     case Keys.Q:
                     case Keys.Left:
                         newX--; // Aller à gauche
-                        if (lab[newY, newX - 1] == 0 && lab[newY, newX] == 0)
+                        if (newX - 1 >= 0 && lab[newY, newX - 1] == 0 && lab[newY, newX] == 0)
                         {
                             newX--;
                         }
@@ -221,7 +227,7 @@ namespace Jeu_pacman
                     case Keys.S:
                     case Keys.Down:
                         newY++; // Aller en bas
-                        if (lab[newY + 1, newX] == 0 && lab[newY, newX] == 0)
+                        if (newY + 1 < hauteur && lab[newY + 1, newX] == 0 && lab[newY, newX] == 0)
                         {
                             newY++;
                         }
@@ -229,7 +235,7 @@ namespace Jeu_pacman
                     case Keys.D:
                     case Keys.Right:
                         newX++; // Aller à droite
-                        if (lab[newY, newX + 1] == 0 && lab[newY, newX] == 0)
+                        if (newX + 1 < largeur && lab[newY, newX + 1] == 0 && lab[newY, newX] == 0)
                         {
                             newX++;
                         }
@@ -262,14 +268,23 @@ namespace Jeu_pacman
         {
             if (!jeuEnPause)
             {
-                Partiee.DeplacerEnnemi(ennemi, hauteur, largeur, lab);
+                if (ennemi != null)
+                {
+                    Partiee.DeplacerEnnemi(ennemi, hauteur, largeur, lab);
+                }
+
+                if (shooter != null)
+                {
+                    Partiee.DeplacerEnnemi(shooter, hauteur, largeur, lab);
+                }
+
                 this.panel1.Invalidate(); // Redessiner le panel
                 Collision();
             }
 
         }
 
-       
+
 
         private void Collision()
         {
@@ -277,10 +292,10 @@ namespace Jeu_pacman
                 if (joueurX == ennemi.X && joueurY == ennemi.Y && humain == true)
                 {
                     JoueurVie--;
-                    pictureBox2.Visible = false;
+                    coeur3.Visible = false;
 
                     SoundPlayer degats = new SoundPlayer();
-                    degats.SoundLocation = "C:\\Users\\jessy\\OneDrive\\Bureau\\codegit\\Jeu pacman\\bin\\Debug\\aie.wav";
+                    degats.SoundLocation = "C:\\Users\\jessy\\Desktop\\codegit\\Jeu pacman\\bin\\Debug\\aie.wav";
                     degats.Play();
                     if (JoueurVie <= 0)
                     {
@@ -290,7 +305,7 @@ namespace Jeu_pacman
                     }
                     else
                     {
-                        Partiee.ResetPositions(ref joueurX,ref joueurY);
+                        Partiee.ResetPositions(ref joueurX, ref joueurY);
 
                         this.panel1.Invalidate();
 
@@ -302,11 +317,13 @@ namespace Jeu_pacman
                     ennemi = null;
                     panel1.Invalidate();
                     MessageBox.Show("Le loup a visiblement frappé ce soir");
+                    Partiee.Nextlvl(hauteur,largeur,lab,joueurX,joueurY,potion,ennemi,shooter,ennemiTimer,panel1);
+
 
 
                 }
         }
-     
+
         private void label1_Click(object sender, EventArgs e)
         {
 
@@ -319,17 +336,17 @@ namespace Jeu_pacman
             if (compteurseconde >= 30)
             {
 
-                if (humain&&JoueurVie!=0)
+                if (humain && JoueurVie != 0)
                 {
                     humain = false;
                     Partiee.bruitage(hurlementloup);
-                    joueurImage = new Bitmap("C:\\Users\\jessy\\OneDrive\\Bureau\\codegit\\images\\loup.png");
+                    joueurImage = new Bitmap("C:\\Users\\jessy\\Desktop\\codegit\\images\\loup.png");
 
                 }
                 else
                 {
                     humain = true;
-                    joueurImage = new Bitmap("C:\\Users\\jessy\\OneDrive\\Bureau\\codegit\\images\\humain.png");
+                    joueurImage = new Bitmap("C:\\Users\\jessy\\Desktop\\codegit\\images\\humain.png");
 
                 }
                 compteurseconde = 0;
@@ -354,7 +371,12 @@ namespace Jeu_pacman
         {
             this.Close();
         }
+
+        private void pictureBox3_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 
-    
+
 }

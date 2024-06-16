@@ -13,7 +13,7 @@ namespace Jeu_pacman
             InitializeComponent();
             instancepause = this;
         }
-     
+
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -22,7 +22,7 @@ namespace Jeu_pacman
 
         private void button2_Click(object sender, EventArgs e)
         {
-            Jeu.jeuEnPause=false;
+            Jeu.jeuEnPause = false;
             Jeu.instance.Reprendre();
             this.Close();
 
@@ -40,6 +40,16 @@ namespace Jeu_pacman
         }
 
         private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
         {
 
         }

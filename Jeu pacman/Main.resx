@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="pictureBox1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="fondmenu.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAABjYAAAN9CAYAAAAwh0CsAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
         vAAADrwBlbxySQAA/7JJREFUeF7s/XecJNd5H3ovCOxO6JzT9Mx093SYTtPTk3POOc9sXgALkARBgAgM
@@ -16454,10 +16454,10 @@
         QCSBookkQCCOZC39BdPfg7IlUu+xAAAAAElFTkSuQmCC
 </value>
   </data>
-  <data name="lblMeilleure.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="lblMeilleurepartie.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAV8AAADHCAYAAAC+91AbAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        vgAADr4B6kKxwAAAAqZJREFUeF7t1CEBACAQADHKvScWraEFZyZWYevsuQD8JV+AgHwBAvIFCMgXICBf
+        vAAADrwBlbxySQAAAqZJREFUeF7t1CEBACAQADHKvScWraEFZyZWYevsuQD8JV+AgHwBAvIFCMgXICBf
         gIB8AQLyBQjIFyAgX4CAfAEC8gUIyBcgIF+AgHwBAvIFCMgXICBfgIB8AQLyBQjIFyAgX4CAfAEC8gUI
         yBcgIF+AgHwBAvIFCMgXICBfgIB8AQLyBQjIFyAgX4CAfAEC8gUIyBcgIF+AgHwBAvIFCMgXICBfgIB8
         AQLyBQjIFyAgX4CAfAEC8gUIyBcgIF+AgHwBAvIFCMgXICBfgIB8AQLyBQjIFyAgX4CAfAEC8gUIyBcg

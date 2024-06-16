@@ -32,40 +32,44 @@ namespace Jeu_pacman
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Jeu));
-            pictureBox1 = new PictureBox();
+            fond = new PictureBox();
             button2 = new Button();
             label2 = new Label();
             label3 = new Label();
             panel1 = new Panel();
-            pictureBox3 = new PictureBox();
-            pictureBox4 = new PictureBox();
-            pictureBox2 = new PictureBox();
+            typeof(Panel).InvokeMember("DoubleBuffered",
+    BindingFlags.SetProperty | BindingFlags.Instance | BindingFlags.NonPublic,
+    null, panel1, new object[] { true });
+            coeur1 = new PictureBox();
+            coeur2 = new PictureBox();
+            coeur3 = new PictureBox();
             compteurr = new Label();
             timer_JourNuit = new System.Windows.Forms.Timer(components);
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox4).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
+            contextMenuStrip1 = new ContextMenuStrip(components);
+            ((System.ComponentModel.ISupportInitialize)fond).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)coeur1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)coeur2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)coeur3).BeginInit();
             SuspendLayout();
             // 
-            // pictureBox1
+            // fond
             // 
-            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(0, -4);
-            pictureBox1.Margin = new Padding(4);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(1954, 1102);
-            pictureBox1.TabIndex = 0;
-            pictureBox1.TabStop = false;
-            pictureBox1.Click += pictureBox1_Click;
+            fond.Image = (Image)resources.GetObject("fond.Image");
+            fond.Location = new Point(0, -2);
+            fond.Margin = new Padding(3, 2, 3, 2);
+            fond.Name = "fond";
+            fond.Size = new Size(1436, 783);
+            fond.TabIndex = 0;
+            fond.TabStop = false;
+            fond.Click += pictureBox1_Click;
             // 
             // button2
             // 
             button2.Image = (Image)resources.GetObject("button2.Image");
-            button2.Location = new Point(935, 4);
-            button2.Margin = new Padding(4);
+            button2.Location = new Point(751, 13);
+            button2.Margin = new Padding(3, 2, 3, 2);
             button2.Name = "button2";
-            button2.Size = new Size(92, 88);
+            button2.Size = new Size(64, 53);
             button2.TabIndex = 2;
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
@@ -77,10 +81,9 @@ namespace Jeu_pacman
             label2.Font = new Font("Microsoft Sans Serif", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label2.ForeColor = Color.FromArgb(255, 224, 192);
             label2.Image = (Image)resources.GetObject("label2.Image");
-            label2.Location = new Point(554, 22);
-            label2.Margin = new Padding(4, 0, 4, 0);
+            label2.Location = new Point(443, 26);
             label2.Name = "label2";
-            label2.Size = new Size(131, 40);
+            label2.Size = new Size(89, 29);
             label2.TabIndex = 4;
             label2.Text = "Score :";
             // 
@@ -91,68 +94,67 @@ namespace Jeu_pacman
             label3.Font = new Font("Microsoft Sans Serif", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
             label3.ForeColor = Color.FromArgb(255, 224, 192);
             label3.Image = (Image)resources.GetObject("label3.Image");
-            label3.Location = new Point(1086, 22);
-            label3.Margin = new Padding(4, 0, 4, 0);
+            label3.Location = new Point(872, 26);
             label3.Name = "label3";
-            label3.Size = new Size(149, 40);
+            label3.Size = new Size(100, 29);
             label3.TabIndex = 5;
             label3.Text = "Niveau :";
             // 
             // panel1
             // 
-            panel1.Location = new Point(261, 100);
-            panel1.Margin = new Padding(4);
+            panel1.Location = new Point(269, 98);
+            panel1.Margin = new Padding(3, 2, 3, 2);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1309, 951);
+            panel1.Size = new Size(1033, 683);
             panel1.TabIndex = 6;
-            typeof(Panel).InvokeMember("DoubleBuffered",
-   BindingFlags.SetProperty | BindingFlags.Instance | BindingFlags.NonPublic,
-   null, panel1, new object[] { true });
             panel1.Paint += panel1_Paint;
             // 
-            // pictureBox3
+            // coeur1
             // 
-            pictureBox3.BackColor = Color.Transparent;
-            pictureBox3.Image = (Image)resources.GetObject("pictureBox3.Image");
-            pictureBox3.Location = new Point(132, 22);
-            pictureBox3.Margin = new Padding(4);
-            pictureBox3.Name = "pictureBox3";
-            pictureBox3.Size = new Size(121, 111);
-            pictureBox3.TabIndex = 8;
-            pictureBox3.TabStop = false;
+            coeur1.BackColor = Color.Transparent;
+            coeur1.BackgroundImageLayout = ImageLayout.None;
+            coeur1.Image = (Image)resources.GetObject("coeur1.Image");
+            coeur1.Location = new Point(92, 13);
+            coeur1.Margin = new Padding(3, 2, 3, 2);
+            coeur1.Name = "coeur1";
+            coeur1.Size = new Size(85, 67);
+            coeur1.TabIndex = 8;
+            coeur1.TabStop = false;
+            coeur1.Click += pictureBox3_Click;
             // 
-            // pictureBox4
+            // coeur2
             // 
-            pictureBox4.BackColor = SystemColors.ScrollBar;
-            pictureBox4.Image = (Image)resources.GetObject("pictureBox4.Image");
-            pictureBox4.Location = new Point(72, 130);
-            pictureBox4.Margin = new Padding(4);
-            pictureBox4.Name = "pictureBox4";
-            pictureBox4.Size = new Size(121, 111);
-            pictureBox4.SizeMode = PictureBoxSizeMode.CenterImage;
-            pictureBox4.TabIndex = 9;
-            pictureBox4.TabStop = false;
+            coeur2.BackColor = Color.Transparent;
+            coeur2.Image = (Image)resources.GetObject("coeur2.Image");
+            coeur2.Location = new Point(50, 78);
+            coeur2.Margin = new Padding(3, 2, 3, 2);
+            coeur2.Name = "coeur2";
+            coeur2.Size = new Size(85, 67);
+            coeur2.SizeMode = PictureBoxSizeMode.CenterImage;
+            coeur2.TabIndex = 9;
+            coeur2.TabStop = false;
             // 
-            // pictureBox2
+            // coeur3
             // 
-            pictureBox2.BackColor = SystemColors.ScrollBar;
-            pictureBox2.Image = (Image)resources.GetObject("pictureBox2.Image");
-            pictureBox2.Location = new Point(15, 22);
-            pictureBox2.Margin = new Padding(4);
-            pictureBox2.Name = "pictureBox2";
-            pictureBox2.Size = new Size(121, 111);
-            pictureBox2.TabIndex = 7;
-            pictureBox2.TabStop = false;
+            coeur3.BackColor = Color.Transparent;
+            coeur3.Image = (Image)resources.GetObject("coeur3.Image");
+            coeur3.Location = new Point(10, 13);
+            coeur3.Margin = new Padding(3, 2, 3, 2);
+            coeur3.Name = "coeur3";
+            coeur3.Size = new Size(85, 67);
+            coeur3.TabIndex = 7;
+            coeur3.TabStop = false;
             // 
             // compteurr
             // 
             compteurr.AutoSize = true;
             compteurr.BackColor = Color.Transparent;
-            compteurr.Font = new Font("Showcard Gothic", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            compteurr.Location = new Point(45, 245);
-            compteurr.MinimumSize = new Size(159, 79);
+            compteurr.Font = new Font("Microsoft Sans Serif", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            compteurr.Location = new Point(32, 147);
+            compteurr.Margin = new Padding(2, 0, 2, 0);
+            compteurr.MinimumSize = new Size(111, 47);
             compteurr.Name = "compteurr";
-            compteurr.Size = new Size(159, 79);
+            compteurr.Size = new Size(111, 47);
             compteurr.TabIndex = 0;
             compteurr.Text = "00:00";
             // 
@@ -162,44 +164,51 @@ namespace Jeu_pacman
             timer_JourNuit.Interval = 1000;
             timer_JourNuit.Tick += timer_JourNuit_Tick;
             // 
+            // contextMenuStrip1
+            // 
+            contextMenuStrip1.Name = "contextMenuStrip1";
+            contextMenuStrip1.Size = new Size(61, 4);
+            // 
             // Jeu
             // 
-            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1924, 1050);
+            ClientSize = new Size(1429, 773);
             Controls.Add(compteurr);
-            Controls.Add(pictureBox4);
-            Controls.Add(pictureBox3);
-            Controls.Add(pictureBox2);
+            Controls.Add(coeur2);
+            Controls.Add(coeur1);
+            Controls.Add(coeur3);
             Controls.Add(panel1);
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(button2);
-            Controls.Add(pictureBox1);
-            Margin = new Padding(4);
+            Controls.Add(fond);
+            Margin = new Padding(3, 2, 3, 2);
             Name = "Jeu";
             Text = "Form1";
             FormClosing += Jeu_FormClosing;
             Load += Form1_Load;
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox4).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)fond).EndInit();
+            ((System.ComponentModel.ISupportInitialize)coeur1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)coeur2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)coeur3).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
 
-        private PictureBox pictureBox1;
+        private PictureBox fond;
         private Button button2;
         private Label label2;
         private Label label3;
         public Panel panel1;
-        private PictureBox pictureBox3;
-        private PictureBox pictureBox4;
-        private PictureBox pictureBox2;
+
+        private PictureBox coeur1;
+        private PictureBox coeur2;
+        private PictureBox coeur3;
         private Label compteurr;
         private System.Windows.Forms.Timer timer_JourNuit;
+        private ContextMenuStrip contextMenuStrip1;
     }
 }
