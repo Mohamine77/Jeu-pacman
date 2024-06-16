@@ -37,6 +37,7 @@ namespace Jeu_pacman
         private int timerInterval;
         public static Jeu instance;
         private int difficulte;
+        private bool passagelvl = false;
         public Jeu()
         {
             InitializeComponent();
@@ -68,7 +69,7 @@ namespace Jeu_pacman
             joueurImage = new Bitmap("C:\\Users\\jessy\\Desktop\\codegit\\images\\humain.png");
             ennemiImage = new Bitmap("C:\\Users\\jessy\\Desktop\\codegit\\images\\ennemi.png");
             potionImage = new Bitmap("C:\\Users\\jessy\\Desktop\\codegit\\images\\potion.png");
-            ennemi = Partiee.GenererEnnemiValide(hauteur,largeur,lab);
+            ennemi = Partiee.GenererEnnemiValide(hauteur,largeur,lab, passagelvl);
             shooter = new Ennemi(random.Next(largeur), random.Next(hauteur), 1.0);
 
             ennemiTimer = new System.Windows.Forms.Timer();
@@ -292,7 +293,15 @@ namespace Jeu_pacman
                 if (joueurX == ennemi.X && joueurY == ennemi.Y && humain == true)
                 {
                     JoueurVie--;
-                    coeur3.Visible = false;
+                    if (JoueurVie == 2)
+                    {
+                        coeur3.Visible = false;
+                    }
+                    else if (JoueurVie == 1)
+                    {
+                        coeur2.Visible = false;
+                    }
+                    else if (JoueurVie == 0) { coeur1.Visible = false; }
 
                     SoundPlayer degats = new SoundPlayer();
                     degats.SoundLocation = "C:\\Users\\jessy\\Desktop\\codegit\\Jeu pacman\\bin\\Debug\\aie.wav";
@@ -317,7 +326,8 @@ namespace Jeu_pacman
                     ennemi = null;
                     panel1.Invalidate();
                     MessageBox.Show("Le loup a visiblement frappé ce soir");
-                    Partiee.Nextlvl(hauteur,largeur,lab,joueurX,joueurY,potion,ennemi,shooter,ennemiTimer,panel1);
+                    passagelvl=true;
+                    Partiee.Nextlvl(joueurImage,potionImage,hauteur,largeur,lab,joueurX,joueurY,potion,ref ennemi,ref shooter,ennemiTimer,panel1,passagelvl);
 
 
 

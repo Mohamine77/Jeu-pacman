@@ -215,16 +215,15 @@ namespace ClassLibrary1
                 graphics.DrawImage(potionImage, potion.EmplacementX * cellSize, potion.EmplacementY * cellSize, cellSize, cellSize);
             }
         }
-        public static void Nextlvl(int hauteur,int largeur, int [,] lab,int joueurX,int joueurY,Potion potion,Ennemi ennemi,Ennemi shooter,Timer ennemiTimer,Panel panel1)
+        public static void Nextlvl(Bitmap ennemiImage,Bitmap potionImage, int hauteur,int largeur, int [,] lab,int joueurX,int joueurY,Potion potion,ref Ennemi ennemi,ref Ennemi shooter,Timer ennemiTimer,Panel panel1,bool passagelvl)
         {
-            // Réinitialiser le labyrinthe
             Partiee.GenerationLab(hauteur, largeur, lab);
             Partiee.ConnectChemin(hauteur, largeur, lab);
 
             // Réinitialiser les positions du joueur et de l'ennemi
             Partiee.ResetPositions(ref joueurX, ref joueurY);
-            ennemi = new Ennemi(random.Next(largeur - 1), random.Next(hauteur), 1.0);
-            shooter = new Ennemi(random.Next(largeur), random.Next(hauteur), 1.0);
+            ennemi = GenererEnnemiValide(hauteur,largeur,lab,passagelvl); // Utilisation de random.Next(largeur) pour éviter les problèmes de débordement
+            shooter = GenererEnnemiValide(hauteur, largeur, lab, passagelvl);
 
             // Réinitialiser les potions
             potion.Initialiser(hauteur, largeur, lab, joueurX, joueurY);
@@ -235,25 +234,34 @@ namespace ClassLibrary1
             // Redessiner le panneau
             panel1.Invalidate();
         }
-        public static Ennemi GenererEnnemiValide(int hauteur,int largeur,int[,] lab)
+        public static Ennemi GenererEnnemiValide(int hauteur,int largeur,int[,] lab,bool passagelvl)
         {
             int x, y;
             do
             {
                 x = random.Next(largeur);
                 y = random.Next(hauteur);
+                passagelvl = false;
             }
-            while (lab[y, x] != 0); // Répétez jusqu'à ce que l'on trouve une position valide (non mur)
+            while (lab[y, x] != 0 && passagelvl==true); // Répétez jusqu'à ce que l'on trouve une position valide (non mur)
 
             return new Ennemi(x, y, 1.0);
         }
-        public static void Collision(int joueurX, int joueurY, Ennemi ennemi, bool humain, int JoueurVie, PictureBox coeur3, Form jeu, Panel panel1, Timer ennemiTimer, string sonmort, string MsgGameOver)
+        public static void Collision(int joueurX, int joueurY, Ennemi ennemi, bool humain, int JoueurVie,PictureBox coeur2,PictureBox coeur1, PictureBox coeur3, Form jeu, Panel panel1, Timer ennemiTimer, string sonmort, string MsgGameOver)
         {
             if (ennemi != null)
                 if (joueurX == ennemi.X && joueurY == ennemi.Y && humain == true)
                 {
                     JoueurVie--;
-                    coeur3.Visible = false;
+                    if (JoueurVie == 2)
+                    {
+                        coeur3.Visible = false;
+                    }
+                    else if (JoueurVie == 1)
+                    {
+                        coeur2.Visible = true;
+                    }
+                    else if(JoueurVie == 0) { coeur1.Visible = true; }
 
                     SoundPlayer degats = new SoundPlayer();
                     degats.SoundLocation = "C:\\Users\\jessy\\Desktop\\codegit\\Jeu pacman\\bin\\Debug\\aie.wav";
