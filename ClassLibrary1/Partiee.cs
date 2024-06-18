@@ -150,15 +150,15 @@ namespace ClassLibrary1
 
         }
 
-        public static void DessinerEnnemi(Graphics graphics, Ennemi ennemi, Bitmap ennemiImage)
+        public static void DessinerEnnemi(Graphics graphics, Ennemi ennemi, Bitmap chasseurImage)
         {
             if (ennemi != null)
             {
                 const int cellSize = 20; // taille de chaque cellule du labyrinthe
-                graphics.DrawImage(ennemiImage, ennemi.X * cellSize, ennemi.Y * cellSize, cellSize, cellSize);
+                graphics.DrawImage(chasseurImage, ennemi.X * cellSize, ennemi.Y * cellSize, cellSize, cellSize);
             }
         }
-        public static void DessinerPotion(Graphics graphics, Potion potion, Bitmap ennemiImage, int hauteur, int largeur, int[,] lab, int joueurx, int joueury)
+        public static void DessinerPotion(Graphics graphics, Potion potion, Bitmap chasseurImage, int hauteur, int largeur, int[,] lab, int joueurx, int joueury)
         {
 
             int emplacementX = 0;
@@ -180,7 +180,7 @@ namespace ClassLibrary1
             }
 
             // Dessiner l'image de la potion à l'emplacement trouvé
-            graphics.DrawImage(ennemiImage, emplacementX * cellSize, emplacementY * cellSize, cellSize, cellSize);
+            graphics.DrawImage(chasseurImage, emplacementX * cellSize, emplacementY * cellSize, cellSize, cellSize);
 
         }
         public static void DessinerLabyrinthe(Graphics graphics, int hauteur, int largeur, int[,] lab, Bitmap joueurImage, int joueurX, int joueurY)
@@ -215,15 +215,16 @@ namespace ClassLibrary1
                 graphics.DrawImage(potionImage, potion.EmplacementX * cellSize, potion.EmplacementY * cellSize, cellSize, cellSize);
             }
         }
-        public static void Nextlvl(Bitmap ennemiImage,Bitmap potionImage, int hauteur,int largeur, int [,] lab,int joueurX,int joueurY,Potion potion,ref Ennemi ennemi,ref Ennemi shooter,Timer ennemiTimer,Panel panel1,bool passagelvl)
+        public static void Nextlvl(Bitmap chasseurImage,Bitmap potionImage, int hauteur,int largeur, int [,] lab,int joueurX,int joueurY,Potion potion,ref Ennemi ennemi,ref Ennemi chasseur,Timer ennemiTimer,Panel panel1,bool passagelvl,ref int niveau)
         {
+            niveau++;
             Partiee.GenerationLab(hauteur, largeur, lab);
             Partiee.ConnectChemin(hauteur, largeur, lab);
 
             // Réinitialiser les positions du joueur et de l'ennemi
             Partiee.ResetPositions(ref joueurX, ref joueurY);
             ennemi = GenererEnnemiValide(hauteur,largeur,lab,passagelvl); // Utilisation de random.Next(largeur) pour éviter les problèmes de débordement
-            shooter = GenererEnnemiValide(hauteur, largeur, lab, passagelvl);
+            chasseur = GenererEnnemiValide(hauteur, largeur, lab, passagelvl);
 
             // Réinitialiser les potions
             potion.Initialiser(hauteur, largeur, lab, joueurX, joueurY);
@@ -247,7 +248,7 @@ namespace ClassLibrary1
 
             return new Ennemi(x, y, 1.0);
         }
-        public static void Collision(int joueurX, int joueurY, Ennemi ennemi, bool humain, int JoueurVie,PictureBox coeur2,PictureBox coeur1, PictureBox coeur3, Form jeu, Panel panel1, Timer ennemiTimer, string sonmort, string MsgGameOver)
+        public static void Collision(int joueurX, int joueurY, Ennemi ennemi, bool humain, int JoueurVie,PictureBox coeur2,PictureBox coeur1, PictureBox coeur3, Form jeu, Panel panel1, Timer ennemiTimer, string sonmort, string MsgGameOver,string son)
         {
             if (ennemi != null)
                 if (joueurX == ennemi.X && joueurY == ennemi.Y && humain == true)
@@ -263,9 +264,7 @@ namespace ClassLibrary1
                     }
                     else if(JoueurVie == 0) { coeur1.Visible = true; }
 
-                    SoundPlayer degats = new SoundPlayer();
-                    degats.SoundLocation = "C:\\Users\\jessy\\Desktop\\codegit\\Jeu pacman\\bin\\Debug\\aie.wav";
-                    degats.Play();
+                    bruitage(son);
                     if (JoueurVie <= 0)
                     {
 
@@ -290,6 +289,7 @@ namespace ClassLibrary1
 
                 }
         }
+      
 
         public class Ennemi
         {

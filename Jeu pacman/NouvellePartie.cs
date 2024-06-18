@@ -6,7 +6,7 @@ namespace Jeu_pacman
 {
     public partial class NouvellePartie : Form
     {
-        int difficulte = 0;
+       public static int difficulte = 0;
         public NouvellePartie()
         {
             InitializeComponent();
