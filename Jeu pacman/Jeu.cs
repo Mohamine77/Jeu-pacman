@@ -6,6 +6,7 @@ using System.Media;
 using ClassLibrary1;
 using System.Runtime.CompilerServices;
 using static ClassLibrary1.Partiee;
+using System.Diagnostics;
 
 
 namespace Jeu_pacman
@@ -24,8 +25,10 @@ namespace Jeu_pacman
         private int joueurX = 2; // position initiale du joueur (x)
         private int joueurY = 2; // position initiale du joueur (y)
         private Bitmap joueurImage; // image du joueur
+
         private Bitmap chasseurImage; // image de l'ennemi
         private Bitmap villageoisImage;
+        private const int MaxDurationMilliseconds = 3000;
         private Bitmap bucheronImage;
         private Bitmap potionImage; // image de l'ennemi
         private Potion potion = new Potion();
@@ -153,6 +156,7 @@ namespace Jeu_pacman
             {
 
                 Partiee.DessinerEnnemi(e.Graphics,chasseur, chasseurImage);
+
                 Partiee.DessinerEnnemi(e.Graphics, villageois, villageoisImage);
                 Partiee.DessinerEnnemi(e.Graphics, bucheron, bucheronImage);
 
@@ -316,10 +320,14 @@ namespace Jeu_pacman
                 if (chasseur != null)
                 {
                     Partiee.DeplacerEnnemi(chasseur, hauteur, largeur, lab);
+                    Ennemi.TirerBalle(panel1, chasseur);
+
+
                 }
-                if(bucheron != null)
+                if (bucheron != null)
                 {
                     Partiee.DeplacerEnnemi(bucheron, hauteur, largeur, lab);
+
 
                 }
 
@@ -333,7 +341,7 @@ namespace Jeu_pacman
 
         private void Collision()
         {
-            // Vérifiez si les ennemis sont null avant de vérifier leurs coordonnées
+           
             if ((villageois != null && joueurX == villageois.X && joueurY == villageois.Y) ||
                 (bucheron != null && joueurX == bucheron.X && joueurY == bucheron.Y) ||
                 (chasseur != null && joueurX == chasseur.X && joueurY == chasseur.Y))
@@ -354,9 +362,7 @@ namespace Jeu_pacman
                         coeur1.Visible = false;
                     }
 
-                    SoundPlayer degats = new SoundPlayer();
-                    degats.SoundLocation = "C:\\Users\\jessy\\Desktop\\codegit\\Jeu pacman\\bin\\Debug\\aie.wav";
-                    degats.Play();
+                    bruitage("C:\\Users\\jessy\\Desktop\\codegit\\Jeu pacman\\bin\\Debug\\aie.wav");
 
                     if (JoueurVie <= 0)
                     {
@@ -379,45 +385,60 @@ namespace Jeu_pacman
                 }
             }
         }
-        private void MAJcoeur()
-        {
-            if (JoueurVie == 2)
-            {
-                coeur3.Visible = false;
-            }
-            else if (JoueurVie == 1)
-            {
-                coeur2.Visible = false;
-            }
-            else if (JoueurVie == 0)
-            {
-                coeur1.Visible = false;
-            }
-        }
-
-        private void collisionhumain()
-        {
-            JoueurVie--;
-            MAJcoeur();
-            bruitage("C:\\Users\\jessy\\Desktop\\codegit\\Jeu pacman\\bin\\Debug\\aie.wav");
-            if (JoueurVie <= 0)
-            {
-                GameOver();
-            }
-            else
-            {
-                Partiee.ResetPositions(ref joueurX, ref joueurY);
-                this.panel1.Invalidate();
-            }
-        }
-        private void collisionloup()
-        {
-
-        }
+        
         private void label1_Click(object sender, EventArgs e)
         {
 
         }
+       
+    
+    //private void Timer_Tick(object sender, EventArgs e)
+    //    {
+    //        if (stopwatch.ElapsedMilliseconds > MaxDurationMilliseconds)
+    //        {
+    //            Dispose();
+    //            return;
+    //        }
+
+    //        Balle.Move();
+
+    //        // Vérification de la collision avec le joueur
+    //        if (Balle.pictureBox.Bounds.IntersectsWith(new Rectangle(joueurX, joueurY, 20, 20)))
+    //        {
+    //            JoueurVie--;
+
+    //            if (JoueurVie == 2)
+    //            {
+    //                coeur3.Visible = false;
+    //            }
+    //            else if (JoueurVie == 1)
+    //            {
+    //                coeur2.Visible = false;
+    //            }
+    //            else if (JoueurVie == 0)
+    //            {
+    //                coeur1.Visible = false;
+    //            }
+    //            bruitage("C:\\Users\\jessy\\Desktop\\codegit\\Jeu pacman\\bin\\Debug\\aie.wav");
+
+    //            if (JoueurVie <= 0)
+    //            {
+    //                GameOver();
+    //            }
+    //            else
+    //            {
+    //                Partiee.ResetPositions(ref joueurX, ref joueurY);
+    //                this.panel1.Invalidate();
+    //            }
+    //            Dispose();
+    //        }
+
+            // Vérification des limites de l'écran ou d'autres conditions de disparition
+        //    if (Balle.pictureBox.Left < 10 || Balle.pictureBox.Left > 300 || Balle.pictureBox.Top < 10 || Balle.pictureBox.Top > 300)
+        //    {
+        //        Dispose();
+        //    }
+        //}
 
         private void timer_JourNuit_Tick(object sender, EventArgs e)
         {

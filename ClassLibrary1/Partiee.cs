@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Media;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
+using System.Windows.Controls.Primitives;
 using System.Windows.Forms;
 using static ClassLibrary1.Partiee;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
@@ -13,6 +16,7 @@ namespace ClassLibrary1
 
     public class Partiee
     {
+        
         private static Random random = new Random();
 
         public static void GenerationLab(int hauteur, int largeur, int[,] lab)
@@ -42,7 +46,7 @@ namespace ClassLibrary1
                 int nx = x + 2 * dx;
                 int ny = y + 2 * dy;
 
-                if (nx > 0 && nx < largeur && ny > 0 && ny < hauteur && lab[ny, nx] == 1)
+                if (nx > 0 && nx < largeur && ny > 0 && ny < hauteur && lab[ny, nx] == 1 )
                 {
                     lab[y + dy, x + dx] = 0;
                     CreerLab(nx, ny, hauteur, largeur, lab);
@@ -128,6 +132,7 @@ namespace ClassLibrary1
         public static void DeplacerEnnemi(Ennemi ennemi, int hauteur, int largeur, int[,] lab)
         {
             bool deplacementValide = false;
+            Random random = new Random();
             while (!deplacementValide)
             {
                 int deplacementX = random.Next(-1, 2);
@@ -138,10 +143,30 @@ namespace ClassLibrary1
 
                 if (nouveauX >= 0 && nouveauX < largeur && nouveauY >= 0 && nouveauY < hauteur && lab[nouveauY, nouveauX] == 0 && (nouveauX != ennemi.X || nouveauY != ennemi.Y))
                 {
+                    if (deplacementX == -1 && deplacementY == 0)
+                    {
+                        ennemi.Direction = "left";
+                    }
+                    else if (deplacementX == 1 && deplacementY == 0)
+                    {
+                        ennemi.Direction = "right";
+                    }
+                    else if (deplacementX == 0 && deplacementY == -1)
+                    {
+                        ennemi.Direction = "up";
+                    }
+                    else if (deplacementX == 0 && deplacementY == 1)
+                    {
+                        ennemi.Direction = "down";
+                    }
+                    else
+                    {
+                        ennemi.Direction = "none"; // En cas de mouvement diagonal ou pas de mouvement
+                    }
+
                     ennemi.X = nouveauX;
                     ennemi.Y = nouveauY;
                     deplacementValide = true;
-
                 }
             }
         }
@@ -235,7 +260,7 @@ namespace ClassLibrary1
             // Redessiner le panneau
             panel1.Invalidate();
         }
-        public static Ennemi GenererEnnemiValide(int hauteur,int largeur,int[,] lab,bool passagelvl)
+        public static  Ennemi GenererEnnemiValide(int hauteur,int largeur,int[,] lab,bool passagelvl)
         {
             int x, y;
             do
@@ -244,7 +269,7 @@ namespace ClassLibrary1
                 y = random.Next(hauteur);
                 passagelvl = false;
             }
-            while (lab[y, x] != 0 && passagelvl==true); // Répétez jusqu'à ce que l'on trouve une position valide (non mur)
+            while (lab[y, x] != 0 && passagelvl==true && y<hauteur-2 && x< largeur-2 &&x >= 2 && y >= 2); // Répétez jusqu'à ce que l'on trouve une position valide (non mur)
 
             return new Ennemi(x, y, 1.0);
         }
@@ -289,12 +314,29 @@ namespace ClassLibrary1
 
                 }
         }
-      
+       
+
 
         public class Ennemi
         {
             public int X { get; set; }
             public int Y { get; set; }
+          
+            public int ennemiLeft
+            {
+                get { return X * 20; } // Calculez la position en pixels basée sur la taille de la cellule du labyrinthe
+            }
+
+            public int ennemiTop
+            {
+                get { return Y * 20; } // Calculez la position en pixels basée sur la taille de la cellule du labyrinthe
+            }
+            public string Direction
+            {
+                get; set;
+            }
+            
+            
             public double Vitesse { get; set; }
 
             public Ennemi(int x, int y, double vitesse)
@@ -302,6 +344,11 @@ namespace ClassLibrary1
                 X = x;
                 Y = y;
                 Vitesse = vitesse * 2;
+            }
+            public static void TirerBalle(Panel panel, Ennemi ennemi)
+            {
+                Balle balle = new Balle(ennemi.ennemiLeft + (20 / 2), ennemi.ennemiTop + (20 / 2), ennemi.Direction);
+                balle.CreerBalle(panel);
             }
 
         }
@@ -325,6 +372,118 @@ namespace ClassLibrary1
                         EmplacementX = x;
                         EmplacementY = y;
                         emplacementTrouve = true;
+                    }
+                }
+            }
+        }
+
+        public class Balle
+        {
+            public string Direction { get; set; }
+            public int Left { get; set; }
+            public int Top { get; set; }
+            public int Speed { get; set; } = 5;
+            public bool IsDisposed { get; private set; } = false;
+
+            private PictureBox pictureBox = new PictureBox();
+            private Timer timer = new Timer();
+            private Stopwatch stopwatch = new Stopwatch();
+            private const int MaxDurationMilliseconds = 2500; // Durée de vie maximale de la balle en millisecondes
+
+            public static int joueurX;
+            public static int joueurY;
+            private int joueurvie;
+
+            public Balle(int left, int top, string direction)
+            {
+                Left = left;
+                Top = top;
+                Direction = direction;
+            }
+
+            public void CreerBalle(Panel panel)
+            {
+                pictureBox.BackColor = Color.Black;
+                pictureBox.Size = new Size(5, 5);
+                pictureBox.Tag = "balle";
+                pictureBox.Left = Left;
+                pictureBox.Top = Top;
+                pictureBox.BringToFront();
+                panel.Controls.Add(pictureBox);
+
+                timer.Interval = Speed;
+                timer.Tick += Timer_Tick;
+                stopwatch.Start();
+                timer.Start();
+            }
+
+            private void Timer_Tick(object sender, EventArgs e)
+            {
+                if (stopwatch.ElapsedMilliseconds > MaxDurationMilliseconds)
+                {
+                    Dispose();
+                    return;
+                }
+
+                Move();
+
+                // Vérification de la collision avec le joueur
+                if (pictureBox.Bounds.IntersectsWith(new Rectangle(joueurX, joueurY, 20, 20)))
+                {
+                    //joueurvie--;
+                    Dispose();
+                }
+
+                // Vérification des limites de l'écran ou d'autres conditions de disparition
+                if (pictureBox.Left < 10 || pictureBox.Left > 300 || pictureBox.Top < 10 || pictureBox.Top > 300)
+                {
+                    Dispose();
+                }
+            }
+
+            private void Move()
+            {
+                switch (Direction)
+                {
+                    case "left":
+                        pictureBox.Left -= Speed;
+                        break;
+                    case "right":
+                        pictureBox.Left += Speed;
+                        break;
+                    case "up":
+                        pictureBox.Top -= Speed;
+                        break;
+                    case "down":
+                        pictureBox.Top += Speed;
+                        break;
+                }
+            }
+
+            private void Dispose()
+            {
+                timer.Stop();
+                timer.Dispose();
+                pictureBox.Dispose();
+                IsDisposed = true;
+            }
+
+            public static void enlevervie(int JoueurVie, PictureBox coeur1, PictureBox coeur2, PictureBox coeur3)
+            {
+                JoueurVie--;
+                if (JoueurVie != 3)
+                {
+                    if (JoueurVie == 2)
+                    {
+                        coeur3.Visible = false;
+                    }
+                    else if (JoueurVie == 1)
+                    {
+                        coeur2.Visible = false;
+                    }
+                    else if (JoueurVie == 0)
+                    {
+                        coeur1.Visible = false;
                     }
                 }
             }
