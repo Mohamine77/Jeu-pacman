@@ -37,7 +37,7 @@
             label3 = new Label();
             label4 = new Label();
             label5 = new Label();
-            textBox1 = new TextBox();
+            txtb_Nompartie = new TextBox();
             chkfacile = new CheckBox();
             chknormal = new CheckBox();
             chkdifficile = new CheckBox();
@@ -149,17 +149,17 @@
             label5.TabIndex = 7;
             label5.Text = "Nom de la partie :";
             // 
-            // textBox1
+            // txtb_Nompartie
             // 
-            textBox1.BackColor = SystemColors.InactiveCaptionText;
-            textBox1.BorderStyle = BorderStyle.None;
-            textBox1.Font = new Font("SimSun-ExtB", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            textBox1.ForeColor = Color.IndianRed;
-            textBox1.Location = new Point(598, 371);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(321, 27);
-            textBox1.TabIndex = 8;
-            textBox1.TextChanged += textBox1_TextChanged;
+            txtb_Nompartie.BackColor = SystemColors.InactiveCaptionText;
+            txtb_Nompartie.BorderStyle = BorderStyle.None;
+            txtb_Nompartie.Font = new Font("SimSun-ExtB", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txtb_Nompartie.ForeColor = Color.IndianRed;
+            txtb_Nompartie.Location = new Point(598, 371);
+            txtb_Nompartie.Name = "txtb_Nompartie";
+            txtb_Nompartie.Size = new Size(321, 27);
+            txtb_Nompartie.TabIndex = 8;
+            txtb_Nompartie.TextChanged += textBox1_TextChanged;
             // 
             // chkfacile
             // 
@@ -171,6 +171,7 @@
             chkfacile.Size = new Size(15, 14);
             chkfacile.TabIndex = 9;
             chkfacile.UseVisualStyleBackColor = false;
+            chkfacile.CheckedChanged += chkfacile_CheckedChanged;
             // 
             // chknormal
             // 
@@ -202,7 +203,7 @@
             Controls.Add(chkdifficile);
             Controls.Add(chknormal);
             Controls.Add(chkfacile);
-            Controls.Add(textBox1);
+            Controls.Add(txtb_Nompartie);
             Controls.Add(label5);
             Controls.Add(label4);
             Controls.Add(label3);
@@ -230,7 +231,7 @@
         private Label label3;
         private Label label4;
         private Label label5;
-        private TextBox textBox1;
+        private TextBox txtb_Nompartie;
         private CheckBox chkfacile;
         private CheckBox chknormal;
         private CheckBox chkdifficile;

@@ -12,6 +12,7 @@ namespace Jeu_pacman
         {
             InitializeComponent();
             instancepause = this;
+            lblnompartie.Text = NouvellePartie.nompartie;
         }
 
 

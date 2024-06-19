@@ -39,6 +39,8 @@
             button1 = new Button();
             button3 = new Button();
             button4 = new Button();
+            lbl_pause_scorepartie = new Label();
+            lbl_pause_meilleurniveau = new Label();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
@@ -96,11 +98,12 @@
             lblnompartie.Font = new Font("Microsoft Sans Serif", 22.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
             lblnompartie.ForeColor = Color.FromArgb(255, 224, 192);
             lblnompartie.Image = (Image)resources.GetObject("lblnompartie.Image");
-            lblnompartie.Location = new Point(658, 150);
+            lblnompartie.Location = new Point(707, 155);
             lblnompartie.Name = "lblnompartie";
             lblnompartie.Size = new Size(154, 36);
             lblnompartie.TabIndex = 6;
             lblnompartie.Text = "NomPartie";
+            lblnompartie.TextAlign = ContentAlignment.TopCenter;
             lblnompartie.Click += label1_Click;
             // 
             // label4
@@ -173,11 +176,39 @@
             button4.UseVisualStyleBackColor = true;
             button4.Click += button4_Click;
             // 
+            // lbl_pause_scorepartie
+            // 
+            lbl_pause_scorepartie.AutoSize = true;
+            lbl_pause_scorepartie.Font = new Font("Microsoft Sans Serif", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lbl_pause_scorepartie.ForeColor = Color.FromArgb(255, 224, 192);
+            lbl_pause_scorepartie.Image = (Image)resources.GetObject("lbl_pause_scorepartie.Image");
+            lbl_pause_scorepartie.Location = new Point(877, 285);
+            lbl_pause_scorepartie.Name = "lbl_pause_scorepartie";
+            lbl_pause_scorepartie.Size = new Size(124, 25);
+            lbl_pause_scorepartie.TabIndex = 12;
+            lbl_pause_scorepartie.Text = "ScorePartie";
+            lbl_pause_scorepartie.TextAlign = ContentAlignment.TopCenter;
+            // 
+            // lbl_pause_meilleurniveau
+            // 
+            lbl_pause_meilleurniveau.AutoSize = true;
+            lbl_pause_meilleurniveau.Font = new Font("Microsoft Sans Serif", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lbl_pause_meilleurniveau.ForeColor = Color.FromArgb(255, 224, 192);
+            lbl_pause_meilleurniveau.Image = (Image)resources.GetObject("lbl_pause_meilleurniveau.Image");
+            lbl_pause_meilleurniveau.Location = new Point(858, 384);
+            lbl_pause_meilleurniveau.Name = "lbl_pause_meilleurniveau";
+            lbl_pause_meilleurniveau.Size = new Size(154, 25);
+            lbl_pause_meilleurniveau.TabIndex = 13;
+            lbl_pause_meilleurniveau.Text = "meilleurNiveau";
+            lbl_pause_meilleurniveau.TextAlign = ContentAlignment.TopCenter;
+            // 
             // Pause
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1542, 854);
+            Controls.Add(lbl_pause_meilleurniveau);
+            Controls.Add(lbl_pause_scorepartie);
             Controls.Add(button4);
             Controls.Add(button3);
             Controls.Add(button1);
@@ -209,5 +240,7 @@
         private Button button1;
         private Button button3;
         private Button button4;
+        private Label lbl_pause_scorepartie;
+        private Label lbl_pause_meilleurniveau;
     }
 }

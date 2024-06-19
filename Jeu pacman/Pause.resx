@@ -26263,7 +26263,7 @@
   <data name="button2.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAEAAAAA/CAYAAABQHc7KAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        vQAADr0BR/uQrQAAA4hJREFUeF7tmslPGnEUx/nnmjStC8giMVoFcQG1abxo0kNj0rIj4lY3sFolCu5L
+        vAAADrwBlbxySQAAA4hJREFUeF7tmslPGnEUx/nnmjStC8giMVoFcQG1abxo0kNj0rIj4lY3sFolCu5L
         qUUsbhWkHrqcvDTGtqaXxluP387PZg7KowGV6cx0Dp/LZOa93/vkvZkfM6iCR1ZMHtoQPmhBdK8Vi9sP
         8SVcg5/jRlnxbbIK4bgFk1tmhJImDO/Wom+/BqpQphkvU1bM7LdgbocTsNUmWwGzrxswHa/Hi4QJo8la
         DO5yAsbTTZh6Z8Xsjg3zb1uxFJengO+cgMh6A8KxekzGzQgm6jCUZAIOGjG9Z0UkacNCogXLG5yAaRkK
@@ -26348,7 +26348,7 @@
   <data name="button1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAV0AAABOCAYAAACDvcU2AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        vQAADr0BR/uQrQAAA1FJREFUeF7t209vVFUYwOH5UpRC6NBpByud6UwT41TduHAjhNpIwh+hOGNDC8TE
+        vAAADrwBlbxySQAAA1FJREFUeF7t209vVFUYwOH5UpRC6NBpByud6UwT41TduHAjhNpIwh+hOGNDC8TE
         uOmmLkzcuGNpgkgUIejCD+CWFaz8Csd7xg4BeoY6DXk38yyenOTmnvfe1S83J7m126tn0utuVf74ajX9
         8/0HAEwgt/NWt3mgqyMHopuDu91ZTE8GogswqSdVdLc7zSq8r7Z15EB0d6pCb60spMf9bnEgAOM9HnSH
         Dd35v9HNX7mDdiP93u8UBwIw3qOqnbmh+Wv39b5mr0R3dLTQb1XR/VJ0ASaV29lvzaebVUtf7utI7f6V
@@ -26403,6 +26403,26 @@
         q4YeH/Z0Y7+rGwuz6fPFE+nymVOp9sVSPV1dmktX3slOpUvVxRziXzfH/1EBQFluZ25obul/XZ0bNja3
         dvPs6VQbtBtp0Gqk/r7N5fnhDb9tls90ARgvtzM3NAc2NzX3dWRrZSHVdrrNtF0Zrp3F4cV888Mbogsw
         qYc3OsOG5pberJqau7rdyX3NnW2mfwGcrngcrLTQygAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="lbl_pause_scorepartie.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAUIAAAA9CAYAAADYrmA8AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        vAAADrwBlbxySQAAANxJREFUeF7t1DEBACAMwDDM7UcWroeQ5oiFnHdnAcpECOSJEMgTIZAnQiBPhECe
+        CIE8EQJ5IgTyRAjkiRDIEyGQJ0IgT4RAngiBPBECeSIE8kQI5IkQyBMhkCdCIE+EQJ4IgTwRAnkiBPJE
+        COSJEMgTIZAnQiBPhECeCIE8EQJ5IgTyRAjkiRDIEyGQJ0IgT4RAngiBPBECeSIE8kQI5IkQyBMhkCdC
+        IE+EQJ4IgTwRAnkiBPJECOSJEMgTIZAnQiBPhECeCIE8EQJ5IgTyRAjkiRDIEyGQJ0IgbvYD6efhyBIk
+        JmkAAAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="lbl_pause_meilleurniveau.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAAUIAAAA9CAYAAADYrmA8AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        vAAADrwBlbxySQAAANxJREFUeF7t1DEBACAMwDDM7UcWroeQ5oiFnHdnAcpECOSJEMgTIZAnQiBPhECe
+        CIE8EQJ5IgTyRAjkiRDIEyGQJ0IgT4RAngiBPBECeSIE8kQI5IkQyBMhkCdCIE+EQJ4IgTwRAnkiBPJE
+        COSJEMgTIZAnQiBPhECeCIE8EQJ5IgTyRAjkiRDIEyGQJ0IgT4RAngiBPBECeSIE8kQI5IkQyBMhkCdC
+        IE+EQJ4IgTwRAnkiBPJECOSJEMgTIZAnQiBPhECeCIE8EQJ5IgTyRAjkiRDIEyGQJ0IgbvYD6efhyBIk
+        JmkAAAAASUVORK5CYII=
 </value>
   </data>
 </root>

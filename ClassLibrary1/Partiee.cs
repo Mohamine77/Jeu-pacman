@@ -99,6 +99,149 @@ namespace ClassLibrary1
 
 
         }
+        public static void Affichageniveaureussi(int difficulte,ref bool verifdifficultetermine)
+        {
+            if(difficulte == 0) return;
+            if (difficulte == 1)
+            {
+                MessageBox.Show("Vous avez réussi le mode facile bon c'est normal après tout.");
+                verifdifficultetermine = true;
+            }
+            else if (difficulte == 2)
+            {
+                MessageBox.Show("Bravo vous avez réussi le mode normal.");
+                verifdifficultetermine = true;
+
+            }
+            else if (difficulte == 3)
+            {
+                MessageBox.Show("Quelle talent vous avez réussi le mode difficile !!!!!");  
+                verifdifficultetermine = true;
+
+            }
+        }
+        public static void tuerEnnemi(ref Ennemi ennemi, Timer ennemiTimer,Panel panel1)
+        {
+            if (ennemi == null || ennemiTimer == null || panel1 == null)
+            {
+                throw new ArgumentNullException("Un des paramètres est null.");
+            }
+
+            ennemi.Visible = false;
+            ennemiTimer.Stop();
+            ennemi = null;
+            panel1.Invalidate();
+
+        }
+        public static void reussiteniveau1(Timer ennemiTimer,Timer ennemitimer2,Ennemi ennemi,Panel panel1,bool passagelvl,string messagestagetermine,ref bool stagereussi)
+        {
+            ennemiTimer.Stop();
+            ennemitimer2.Stop();
+            ennemi = null;
+            panel1.Invalidate();
+            passagelvl = true;
+            stagereussi = true;
+
+            MessageBox.Show(messagestagetermine);
+
+        }
+
+        public static void niveaureussitverif(ref int stagelevelencours, Timer ennemiTimer, ref bool verifdifficultetermin, Timer ennemiTimer2, ref Ennemi ennemi, ref Ennemi ennemi2, Panel panel1, bool passagelvl, ref bool stagereussi, int joueurX, int joueurY, Bitmap ennemiimage, Bitmap bonusimage, int hauteur, int largeur, int[,] lab, Potion potion, int niveau, int difficulte)
+        {
+            if (ennemiTimer == null || panel1 == null)
+            {
+                throw new ArgumentNullException("ennemiTimer ou panel1 doivent être définis.");
+            }
+
+            if (stagelevelencours == 1)
+            {
+                tuerEnnemi(ref ennemi, ennemiTimer, panel1);
+
+                // Vérification si le deuxième ennemi est présent et tué
+                if (ennemi2 != null && joueurX == ennemi2.X && joueurY == ennemi2.Y)
+                {
+                    reussiteniveau1(ennemiTimer, ennemiTimer2, ennemi2, panel1, passagelvl, "Le loup a visiblement frappé ce soir", ref stagereussi);
+                }
+                else if (ennemi2 == null && ennemi == null)
+                {
+                    reussiteniveau1(ennemiTimer, ennemiTimer2, ennemi2, panel1, passagelvl, "Le loup a visiblement frappé ce soir", ref stagereussi);
+
+                }
+            }
+           
+            else if (stagelevelencours == 2 || stagelevelencours == 3)
+            {
+                tuerEnnemi(ref ennemi, ennemiTimer, panel1);
+                panel1.Invalidate();
+
+                // Vérification si le deuxième ennemi est présent et tué
+                if (ennemi2 != null && joueurX == ennemi2.X && joueurY == ennemi2.Y)
+                {
+                    reussiteniveau1(ennemiTimer, ennemiTimer2, ennemi2, panel1, passagelvl, "Le loup a visiblement frappé ce soir", ref stagereussi);
+                }
+                else if (ennemi2 == null && ennemi == null)
+                {
+                    reussiteniveau1(ennemiTimer, ennemiTimer2, ennemi2, panel1, passagelvl, "Le loup a visiblement frappé ce soir", ref stagereussi);
+
+                }
+            }
+
+            // Si le niveau en cours est inférieur à 3 et que le niveau est réussi
+            if (stagelevelencours < 3 && stagereussi)
+            {
+                Partiee.Nextlvl1(ennemiimage, bonusimage, hauteur, largeur, lab, joueurX, joueurY, potion, ref ennemi, ennemiTimer, ennemiTimer2, panel1, passagelvl, niveau, ref stagelevelencours);
+            }
+            else if (stagereussi)
+            {
+                Affichageniveaureussi(difficulte, ref verifdifficultetermin);
+            }
+        }
+        public static void niveaureussitverifalternatif(ref int stagelevelencours, Timer ennemiTimer, ref bool verifdifficultetermin, Timer ennemiTimer2, ref Ennemi ennemi, ref Ennemi ennemi2, Panel panel1, bool passagelvl, ref bool stagereussi, int joueurX, int joueurY, Bitmap ennemiimage, Bitmap bonusimage, int hauteur, int largeur, int[,] lab, Potion potion, int niveau, int difficulte)
+        {
+            if (ennemiTimer == null || panel1 == null)
+            {
+                throw new ArgumentNullException("ennemiTimer ou panel1 doivent être définis.");
+            }
+
+            if (stagelevelencours == 1)
+            {
+                tuerEnnemi(ref ennemi, ennemiTimer, panel1);
+
+                // Vérification si le deuxième ennemi est présent et tué
+                if (ennemi2 != null && joueurX == ennemi2.X && joueurY == ennemi2.Y)
+                {
+                    reussiteniveau1(ennemiTimer, ennemiTimer2, ennemi2, panel1, passagelvl, "Le loup a visiblement frappé ce soir", ref stagereussi);
+                }
+                else if (ennemi2 == null&&ennemi==null)
+                {
+                    reussiteniveau1(ennemiTimer, ennemiTimer2, ennemi2, panel1, passagelvl, "Le loup a visiblement frappé ce soir", ref stagereussi);
+
+                }
+            }
+            else if (stagelevelencours == 2 || stagelevelencours == 3)
+            {
+                tuerEnnemi(ref ennemi, ennemiTimer, panel1);
+                panel1.Invalidate();
+
+                // Vérification si le deuxième ennemi est présent et tué
+                if (ennemi2 != null && joueurX == ennemi2.X && joueurY == ennemi2.Y)
+                {
+                    reussiteniveau1(ennemiTimer, ennemiTimer2, ennemi2, panel1, passagelvl, "Le loup a visiblement frappé ce soir", ref stagereussi);
+                }
+            }
+      
+
+            // Si le niveau en cours est inférieur à 3 et que le niveau est réussi
+            if (stagelevelencours < 3 && stagereussi)
+            {
+                Partiee.Nextlvl1(ennemiimage, bonusimage, hauteur, largeur, lab, joueurX, joueurY, potion, ref ennemi, ennemiTimer, ennemiTimer2, panel1, passagelvl, niveau, ref stagelevelencours);
+            }
+            else if (stagereussi)
+            {
+                Affichageniveaureussi(difficulte, ref verifdifficultetermin);
+            }
+        }
+
         public static List<Tuple<int, int>> TrouveVoisins(int x, int y, int largeur, int hauteur, int[,] lab)
         {
             List<Tuple<int, int>> voisins = new List<Tuple<int, int>>();
@@ -131,47 +274,79 @@ namespace ClassLibrary1
         //déplacement de l'ennemi de manière général sans implémentation de système de difficulté
         public static void DeplacerEnnemi(Ennemi ennemi, int hauteur, int largeur, int[,] lab)
         {
-            bool deplacementValide = false;
-            Random random = new Random();
-            while (!deplacementValide)
+            if (ennemi != null)
             {
-                int deplacementX = random.Next(-1, 2);
-                int deplacementY = random.Next(-1, 2);
-
-                int nouveauX = ennemi.X + deplacementX;
-                int nouveauY = ennemi.Y + deplacementY;
-
-                if (nouveauX >= 0 && nouveauX < largeur && nouveauY >= 0 && nouveauY < hauteur && lab[nouveauY, nouveauX] == 0 && (nouveauX != ennemi.X || nouveauY != ennemi.Y))
+                bool deplacementValide = false;
+                Random random = new Random();
+                while (!deplacementValide)
                 {
-                    if (deplacementX == -1 && deplacementY == 0)
-                    {
-                        ennemi.Direction = "left";
-                    }
-                    else if (deplacementX == 1 && deplacementY == 0)
-                    {
-                        ennemi.Direction = "right";
-                    }
-                    else if (deplacementX == 0 && deplacementY == -1)
-                    {
-                        ennemi.Direction = "up";
-                    }
-                    else if (deplacementX == 0 && deplacementY == 1)
-                    {
-                        ennemi.Direction = "down";
-                    }
-                    else
-                    {
-                        ennemi.Direction = "none"; // En cas de mouvement diagonal ou pas de mouvement
-                    }
+                    int deplacementX = random.Next(-1, 2);
+                    int deplacementY = random.Next(-1, 2);
 
-                    ennemi.X = nouveauX;
-                    ennemi.Y = nouveauY;
-                    deplacementValide = true;
+                    int nouveauX = ennemi.X + deplacementX;
+                    int nouveauY = ennemi.Y + deplacementY;
+
+                    if (nouveauX >= 0 && nouveauX < largeur && nouveauY >= 0 && nouveauY < hauteur && lab[nouveauY, nouveauX] == 0 && (nouveauX != ennemi.X || nouveauY != ennemi.Y))
+                    {
+                        if (deplacementX == -1 && deplacementY == 0)
+                        {
+                            ennemi.Direction = "left";
+                        }
+                        else if (deplacementX == 1 && deplacementY == 0)
+                        {
+                            ennemi.Direction = "right";
+                        }
+                        else if (deplacementX == 0 && deplacementY == -1)
+                        {
+                            ennemi.Direction = "up";
+                        }
+                        else if (deplacementX == 0 && deplacementY == 1)
+                        {
+                            ennemi.Direction = "down";
+                        }
+                        else
+                        {
+                            ennemi.Direction = "none"; // En cas de mouvement diagonal ou pas de mouvement
+                        }
+
+                        ennemi.X = nouveauX;
+                        ennemi.Y = nouveauY;
+                        deplacementValide = true;
+                    }
                 }
             }
         }
         public static void degats()
         {
+
+        }
+        public static void Enlevervie(ref int joueurvie, PictureBox coeur1, PictureBox coeur2, PictureBox coeur3,int nbvieaperdre)
+        {
+            if(nbvieaperdre > 3)
+            {
+                throw new Exception("Le nombre de vie a enlever est incorrect");
+            }
+                joueurvie = joueurvie - nbvieaperdre;
+      
+                if (joueurvie == 2)
+                {
+                    coeur3.Visible = false;
+                }
+                else if (joueurvie == 1)
+                {
+                    coeur2.Visible = false;
+                    coeur3.Visible = false;
+
+            }
+            else if (joueurvie == 0)
+                {
+                    coeur1.Visible = false;
+                    coeur2.Visible = false;
+                    coeur3.Visible = false;
+
+            }
+
+
 
         }
 
@@ -240,25 +415,30 @@ namespace ClassLibrary1
                 graphics.DrawImage(potionImage, potion.EmplacementX * cellSize, potion.EmplacementY * cellSize, cellSize, cellSize);
             }
         }
-        public static void Nextlvl(Bitmap chasseurImage,Bitmap potionImage, int hauteur,int largeur, int [,] lab,int joueurX,int joueurY,Potion potion,ref Ennemi ennemi,ref Ennemi chasseur,Timer ennemiTimer,Panel panel1,bool passagelvl,ref int niveau)
+        public static void Nextlvl1(Bitmap chasseurImage,Bitmap potionImage, int hauteur,int largeur, int [,] lab,int joueurX,int joueurY,Potion potion,ref Ennemi ennemi,Timer ennemiTimer,Timer ennemiTimer2,Panel panel1,bool passagelvl,int niveau,ref int stageniveauactuel)
         {
-            niveau++;
-            Partiee.GenerationLab(hauteur, largeur, lab);
-            Partiee.ConnectChemin(hauteur, largeur, lab);
+            
+                niveau++;
+                Partiee.GenerationLab(hauteur, largeur, lab);
+                Partiee.ConnectChemin(hauteur, largeur, lab);
 
-            // Réinitialiser les positions du joueur et de l'ennemi
-            Partiee.ResetPositions(ref joueurX, ref joueurY);
-            ennemi = GenererEnnemiValide(hauteur,largeur,lab,passagelvl); // Utilisation de random.Next(largeur) pour éviter les problèmes de débordement
-            chasseur = GenererEnnemiValide(hauteur, largeur, lab, passagelvl);
+                // Réinitialiser les positions du joueur et de l'ennemi
+                Partiee.ResetPositions(ref joueurX, ref joueurY);
+                ennemi = GenererEnnemiValide(hauteur, largeur, lab, passagelvl); // Utilisation de random.Next(largeur) pour éviter les problèmes de débordement
+                Ennemi ennemi2 = GenererEnnemiValide(hauteur, largeur, lab, passagelvl);
+                // Réinitialiser les potions
+                potion.Initialiser(hauteur, largeur, lab, joueurX, joueurY);
 
-            // Réinitialiser les potions
-            potion.Initialiser(hauteur, largeur, lab, joueurX, joueurY);
-
-            // Redémarrer le timer de l'ennemi
-            ennemiTimer.Start();
+                // Redémarrer le timer de l'ennemi
+                ennemiTimer.Start();
+                ennemiTimer2.Start();
 
             // Redessiner le panneau
+            stageniveauactuel = stageniveauactuel + 1;
+
             panel1.Invalidate();
+                
+            
         }
         public static  Ennemi GenererEnnemiValide(int hauteur,int largeur,int[,] lab,bool passagelvl)
         {
@@ -335,8 +515,9 @@ namespace ClassLibrary1
             {
                 get; set;
             }
-            
-            
+            public bool Visible { get; set; } = true;
+
+
             public double Vitesse { get; set; }
 
             public Ennemi(int x, int y, double vitesse)
@@ -377,116 +558,100 @@ namespace ClassLibrary1
             }
         }
 
-        public class Balle
-        {
-            public string Direction { get; set; }
-            public int Left { get; set; }
-            public int Top { get; set; }
-            public int Speed { get; set; } = 5;
-            public bool IsDisposed { get; private set; } = false;
-
-            private PictureBox pictureBox = new PictureBox();
-            private Timer timer = new Timer();
-            private Stopwatch stopwatch = new Stopwatch();
-            private const int MaxDurationMilliseconds = 2500; // Durée de vie maximale de la balle en millisecondes
-
-            public static int joueurX;
-            public static int joueurY;
-            private int joueurvie;
-
-            public Balle(int left, int top, string direction)
+        
+            public class Balle
             {
-                Left = left;
-                Top = top;
-                Direction = direction;
-            }
+                public string Direction { get; set; }
+                public int Left { get; set; }
+                public int Top { get; set; }
+                public int Speed { get; set; } = 5; // Réduire cette valeur pour ralentir les balles
+                public bool IsDisposed { get; private set; } = false;
 
-            public void CreerBalle(Panel panel)
-            {
-                pictureBox.BackColor = Color.Black;
-                pictureBox.Size = new Size(5, 5);
-                pictureBox.Tag = "balle";
-                pictureBox.Left = Left;
-                pictureBox.Top = Top;
-                pictureBox.BringToFront();
-                panel.Controls.Add(pictureBox);
+                private PictureBox pictureBox = new PictureBox();
+                private Timer timer = new Timer();
+                private Stopwatch stopwatch = new Stopwatch();
+                private const int MaxDurationMilliseconds = 3000; // Durée de vie maximale de la balle en millisecondes
 
-                timer.Interval = Speed;
-                timer.Tick += Timer_Tick;
-                stopwatch.Start();
-                timer.Start();
-            }
+                public static int joueurX;
+                public static int joueurY;
+                private int joueurvie;
+                public static Action OnPlayerHit; // Delegate for player hit event
 
-            private void Timer_Tick(object sender, EventArgs e)
-            {
-                if (stopwatch.ElapsedMilliseconds > MaxDurationMilliseconds)
+                public Balle(int left, int top, string direction)
                 {
-                    Dispose();
-                    return;
+                    Left = left;
+                    Top = top;
+                    Direction = direction;
                 }
 
-                Move();
-
-                // Vérification de la collision avec le joueur
-                if (pictureBox.Bounds.IntersectsWith(new Rectangle(joueurX, joueurY, 20, 20)))
+                public void CreerBalle(Panel panel)
                 {
-                    //joueurvie--;
-                    Dispose();
+                    pictureBox.BackColor = Color.Black;
+                    pictureBox.Size = new Size(5, 5);
+                    pictureBox.Tag = "balle";
+                    pictureBox.Left = Left;
+                    pictureBox.Top = Top;
+                    pictureBox.BringToFront();
+                    panel.Controls.Add(pictureBox);
+
+                    timer.Interval = 50; // Intervalle de temps pour le timer, ajustez si nécessaire
+                    timer.Tick += Timer_Tick;
+                    stopwatch.Start();
+                    timer.Start();
                 }
 
-                // Vérification des limites de l'écran ou d'autres conditions de disparition
-                if (pictureBox.Left < 10 || pictureBox.Left > 300 || pictureBox.Top < 10 || pictureBox.Top > 300)
+                public void Timer_Tick(object sender, EventArgs e)
                 {
-                    Dispose();
-                }
-            }
-
-            private void Move()
-            {
-                switch (Direction)
-                {
-                    case "left":
-                        pictureBox.Left -= Speed;
-                        break;
-                    case "right":
-                        pictureBox.Left += Speed;
-                        break;
-                    case "up":
-                        pictureBox.Top -= Speed;
-                        break;
-                    case "down":
-                        pictureBox.Top += Speed;
-                        break;
-                }
-            }
-
-            private void Dispose()
-            {
-                timer.Stop();
-                timer.Dispose();
-                pictureBox.Dispose();
-                IsDisposed = true;
-            }
-
-            public static void enlevervie(int JoueurVie, PictureBox coeur1, PictureBox coeur2, PictureBox coeur3)
-            {
-                JoueurVie--;
-                if (JoueurVie != 3)
-                {
-                    if (JoueurVie == 2)
+                    if (stopwatch.ElapsedMilliseconds > MaxDurationMilliseconds)
                     {
-                        coeur3.Visible = false;
+                        Dispose();
+                        return;
                     }
-                    else if (JoueurVie == 1)
+
+                    Move();
+
+                    // Vérification de la collision avec le joueur
+                    if (pictureBox.Bounds.IntersectsWith(new Rectangle(joueurX, joueurY, 20, 20)))
                     {
-                        coeur2.Visible = false;
+                        OnPlayerHit?.Invoke(); // Trigger the player hit event
+                        Dispose();
                     }
-                    else if (JoueurVie == 0)
+
+                    // Vérification des limites de l'écran ou d'autres conditions de disparition
+                    if (pictureBox.Left < 10 || pictureBox.Left > 300 || pictureBox.Top < 10 || pictureBox.Top > 300)
                     {
-                        coeur1.Visible = false;
+                        Dispose();
                     }
                 }
+
+                private void Move()
+                {
+                    switch (Direction)
+                    {
+                        case "left":
+                            pictureBox.Left -= Speed;
+                            break;
+                        case "right":
+                            pictureBox.Left += Speed;
+                            break;
+                        case "up":
+                            pictureBox.Top -= Speed;
+                            break;
+                        case "down":
+                            pictureBox.Top += Speed;
+                            break;
+                    }
+                }
+
+                private void Dispose()
+                {
+                    timer.Stop();
+                    timer.Dispose();
+                    pictureBox.Dispose();
+                    IsDisposed = true;
+                }
+
+               
             }
         }
-    }
 }

@@ -18,33 +18,45 @@ namespace Jeu_pacman
         private static Random random = new Random();
         public bool humain = true;
         private int compteurseconde = 0;
-        private int JoueurVie = 3;
-        private const int largeur = 21; // largeur du labyrinthe
-        private const int hauteur = 18; // hauteur du labyrinthe
+        public int JoueurVie = 3;
+        private const int largeur = 10; // largeur du labyrinthe
+        private const int hauteur = 10; // hauteur du labyrinthe
         private static int[,] lab = new int[hauteur, largeur]; // tableau qui représente le labyrinthe
         private int joueurX = 2; // position initiale du joueur (x)
         private int joueurY = 2; // position initiale du joueur (y)
         private Bitmap joueurImage; // image du joueur
-
+        private Graphics panel1graphics;
         private Bitmap chasseurImage; // image de l'ennemi
         private Bitmap villageoisImage;
         private const int MaxDurationMilliseconds = 3000;
         private Bitmap bucheronImage;
         private Bitmap potionImage; // image de l'ennemi
         private Potion potion = new Potion();
-       
+
         string hurlementloup = "C:\\Users\\jessy\\Desktop\\codegit\\Jeu pacman\\bin\\Debug\\aou.wav";
         private Ennemi villageois;
-        private Ennemi bucheron;                         // ennemi du jeu
+        private Ennemi villageois2;
+
+        private Ennemi bucheron;
+        private Ennemi bucheron2;// ennemi du jeu
         private Ennemi chasseur;
+        private Ennemi chasseur2;
+
         private Potion Potion;
-        private System.Windows.Forms.Timer ennemiTimer; // Timer pour le déplacement de l'ennemi
+        private System.Windows.Forms.Timer ennemiTimera;
+        private System.Windows.Forms.Timer ennemiTimerb; // Timer pour le déplacement de l'ennemi
         private bool premierDeplacement = false; // Indicateur pour le premier déplacement du joueur
         public static bool jeuEnPause = false;
         private int timerInterval;
         public static Jeu instance;
         private bool passagelvl = false;
         private int niveau = 0;
+        private int stagelevelencours = 1;
+        private bool invincibilite=false;
+        private bool stagereussi = false;
+        private bool verifdifficultetermine = false;
+        int iterationjeu = 0;
+        int scorejeu = 0;
         public Jeu()
         {
             InitializeComponent();
@@ -64,7 +76,7 @@ namespace Jeu_pacman
 
 
         }
-
+       
         private void InitGameComponents()
         {
             this.KeyPreview = true;
@@ -81,23 +93,28 @@ namespace Jeu_pacman
             if (NouvellePartie.difficulte == 1)
             {
                 villageois = Partiee.GenererEnnemiValide(hauteur, largeur, lab, passagelvl);
-            } else if ((NouvellePartie.difficulte == 2)){
-                villageois = Partiee.GenererEnnemiValide(hauteur, largeur, lab, passagelvl);
-                bucheron = Partiee.GenererEnnemiValide(hauteur,largeur, lab, passagelvl);  
+                villageois2 = Partiee.GenererEnnemiValide(hauteur, largeur, lab, passagelvl);
+
+            }
+            else if ((NouvellePartie.difficulte == 2)) {
+                bucheron = Partiee.GenererEnnemiValide(hauteur, largeur, lab, passagelvl);
+
             }
             else
             {
-                villageois = Partiee.GenererEnnemiValide(hauteur, largeur, lab, passagelvl);
-                chasseur = Partiee.GenererEnnemiValide(hauteur, largeur, lab, passagelvl);
+                bucheron2 = Partiee.GenererEnnemiValide(hauteur, largeur, lab, passagelvl);
                 bucheron = Partiee.GenererEnnemiValide(hauteur, largeur, lab, passagelvl);
 
 
             }
 
 
-            ennemiTimer = new System.Windows.Forms.Timer();
-            ennemiTimer.Interval = 500; // Intervalle en millisecondes (500ms = 0.5s)
-            ennemiTimer.Tick += new EventHandler(EnnemiTimer_Tick);
+            ennemiTimera = new System.Windows.Forms.Timer();
+            ennemiTimera.Interval = 500; // Intervalle en millisecondes (500ms = 0.5s)
+            ennemiTimera.Tick += new EventHandler(EnnemiTimera_Tick);
+            ennemiTimerb = new System.Windows.Forms.Timer();
+            ennemiTimerb.Interval = 500; // Intervalle en millisecondes (500ms = 0.5s)
+            ennemiTimerb.Tick += new EventHandler(EnnemiTimerb_Tick);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -107,7 +124,7 @@ namespace Jeu_pacman
 
         private void button2_Click(object sender, EventArgs e)
         {
-            ennemiTimer.Stop();
+            ennemiTimera.Stop();
             timer_JourNuit.Stop();
             this.Hide();
 
@@ -122,7 +139,8 @@ namespace Jeu_pacman
 
 
             MessageBox.Show("Game Over! le loup est mort ce soir...");
-            ennemiTimer.Stop();
+            ennemiTimera.Stop();
+            ennemiTimerb .Stop();
             Main mainform = new Main();
 
             mainform.Show();
@@ -137,35 +155,43 @@ namespace Jeu_pacman
 
 
         private void panel1_Paint(object sender, PaintEventArgs e)
+{
+    Partiee.DessinerLabyrinthe(e.Graphics, hauteur, largeur, lab, joueurImage, joueurX, joueurY);
+    Partiee.DessinerPotion(e.Graphics, potion, potionImage, 20);
+
+    if (NouvellePartie.difficulte == 1)
+    {
+        if (villageois != null && villageois.Visible)
         {
-
-            Partiee.DessinerLabyrinthe(e.Graphics, hauteur, largeur, lab, joueurImage, joueurX, joueurY);
-            Partiee.DessinerPotion(e.Graphics, potion, potionImage, 20);
-            if (NouvellePartie.difficulte == 1)
-            {
-                Partiee.DessinerEnnemi(e.Graphics, villageois, villageoisImage);
-            }
-            else if (NouvellePartie.difficulte == 2)
-            {
-                Partiee.DessinerEnnemi(e.Graphics, bucheron, bucheronImage);
-                Partiee.DessinerEnnemi(e.Graphics, villageois, villageoisImage);
-
-
-            }
-            else
-            {
-
-                Partiee.DessinerEnnemi(e.Graphics,chasseur, chasseurImage);
-
-                Partiee.DessinerEnnemi(e.Graphics, villageois, villageoisImage);
-                Partiee.DessinerEnnemi(e.Graphics, bucheron, bucheronImage);
-
-
-            }
-
-
-
+            Partiee.DessinerEnnemi(e.Graphics, villageois, villageoisImage);
         }
+
+        if (stagelevelencours == 2 && villageois2 != null && villageois2.Visible)
+        {
+            DeplacerEnnemi(villageois2, hauteur, largeur, lab);
+            Partiee.DessinerEnnemi(e.Graphics, villageois2, villageoisImage);
+        }
+    }
+    else if (NouvellePartie.difficulte == 2)
+    {
+        if (bucheron != null && bucheron.Visible)
+        {
+            Partiee.DessinerEnnemi(e.Graphics, bucheron, bucheronImage);
+        }
+    }
+    else
+    {
+        if (bucheron2 != null && bucheron2.Visible)
+        {
+            Partiee.DessinerEnnemi(e.Graphics, bucheron2, bucheronImage);
+        }
+
+        if (bucheron != null && bucheron.Visible)
+        {
+            Partiee.DessinerEnnemi(e.Graphics, bucheron, bucheronImage);
+        }
+    }
+}
 
 
         private void Jeu_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -186,7 +212,9 @@ namespace Jeu_pacman
             Pause pause = new Pause();
             if (jeuEnPause)
             {
-                ennemiTimer.Stop();
+                ennemiTimera.Stop();
+                ennemiTimerb.Stop();
+
                 timer_JourNuit.Stop();
                 this.Hide();
 
@@ -207,7 +235,8 @@ namespace Jeu_pacman
         public void Reprendre()
         {
             jeuEnPause = false;
-            ennemiTimer.Start();
+            ennemiTimera.Start();
+            ennemiTimerb.Start();
             timer_JourNuit.Start();
             this.Show();
         }
@@ -298,7 +327,9 @@ namespace Jeu_pacman
             if (!premierDeplacement)
             {
                 premierDeplacement = true;
-                ennemiTimer.Start(); // Démarrer le Timer au premier déplacement du joueur
+                ennemiTimera.Start();
+                ennemiTimerb.Start();
+                // Démarrer le Timer au premier déplacement du joueur
             }
 
 
@@ -308,9 +339,9 @@ namespace Jeu_pacman
         }
 
 
-        private void EnnemiTimer_Tick(object sender, EventArgs e)
+        private void EnnemiTimera_Tick(object sender, EventArgs e)
         {
-            if (!jeuEnPause)
+            if (!jeuEnPause&&premierDeplacement)
             {
                 if (villageois != null)
                 {
@@ -336,34 +367,46 @@ namespace Jeu_pacman
             }
 
         }
+        private void EnnemiTimerb_Tick(object sender, EventArgs e)
+        {
+            if (!jeuEnPause && premierDeplacement)
+            {
+                if (villageois2 != null)
+                {
+                    Partiee.DeplacerEnnemi(villageois2, hauteur, largeur, lab);
+                }
+
+                if (chasseur2 != null)
+                {
+                    Partiee.DeplacerEnnemi(chasseur2, hauteur, largeur, lab);
+                    Ennemi.TirerBalle(panel1, chasseur);
+
+
+                }
+                if (bucheron2 != null)
+                {
+                    Partiee.DeplacerEnnemi(bucheron2, hauteur, largeur, lab);
+
+
+                }
+
+                this.panel1.Invalidate(); // Redessiner le panel
+                Collision();
+            }
+
+        }
+
 
 
 
         private void Collision()
         {
-           
-            if ((villageois != null && joueurX == villageois.X && joueurY == villageois.Y) ||
-                (bucheron != null && joueurX == bucheron.X && joueurY == bucheron.Y) ||
-                (chasseur != null && joueurX == chasseur.X && joueurY == chasseur.Y))
+            if (NouvellePartie.difficulte == 1)
             {
-                if (humain)
+                // Vérification pour le villageois
+                if (villageois != null && joueurX == villageois.X && joueurY == villageois.Y && humain)
                 {
-                    JoueurVie--;
-                    if (JoueurVie == 2)
-                    {
-                        coeur3.Visible = false;
-                    }
-                    else if (JoueurVie == 1)
-                    {
-                        coeur2.Visible = false;
-                    }
-                    else if (JoueurVie == 0)
-                    {
-                        coeur1.Visible = false;
-                    }
-
-                    bruitage("C:\\Users\\jessy\\Desktop\\codegit\\Jeu pacman\\bin\\Debug\\aie.wav");
-
+                    Partiee.Enlevervie(ref JoueurVie, coeur1, coeur2, coeur3, 1);
                     if (JoueurVie <= 0)
                     {
                         GameOver();
@@ -373,121 +416,206 @@ namespace Jeu_pacman
                         Partiee.ResetPositions(ref joueurX, ref joueurY);
                         this.panel1.Invalidate();
                     }
+                    bruitage("C:\\Users\\jessy\\Desktop\\codegit\\Jeu pacman\\bin\\Debug\\aie.wav");
                 }
-                else if (villageois != null && joueurX == villageois.X && joueurY == villageois.Y)
+
+                // Vérification pour le deuxième villageois dans le niveau 2
+                if (stagelevelencours >= 2 && villageois2 != null && joueurX == villageois2.X && joueurY == villageois2.Y && humain)
                 {
-                    ennemiTimer.Stop();
-                    villageois = null;
-                    panel1.Invalidate();
-                    MessageBox.Show("Le loup a visiblement frappé ce soir");
-                    passagelvl = true;
-                    Partiee.Nextlvl(joueurImage, potionImage, hauteur, largeur, lab, joueurX, joueurY, potion, ref villageois, ref chasseur, ennemiTimer, panel1, passagelvl, ref niveau);
+                    Partiee.Enlevervie(ref JoueurVie, coeur1, coeur2, coeur3, 1);
+                    if (JoueurVie <= 0)
+                    {
+                        GameOver();
+                    }
+                    else
+                    {
+                        Partiee.ResetPositions(ref joueurX, ref joueurY);
+                        this.panel1.Invalidate();
+                    }
+                    bruitage("C:\\Users\\jessy\\Desktop\\codegit\\Jeu pacman\\bin\\Debug\\aie.wav");
                 }
             }
+            else if (NouvellePartie.difficulte == 2)
+            {
+                // Vérification pour le bucheron dans le niveau 2
+                if (bucheron != null && joueurX == bucheron.X && joueurY == bucheron.Y && humain)
+                {
+                    Partiee.Enlevervie(ref JoueurVie, coeur1, coeur2, coeur3, 2);
+                    if (JoueurVie <= 0)
+                    {
+                        GameOver();
+                    }
+                    else
+                    {
+                        Partiee.ResetPositions(ref joueurX, ref joueurY);
+                        this.panel1.Invalidate();
+                    }
+                    bruitage("C:\\Users\\jessy\\Desktop\\codegit\\Jeu pacman\\bin\\Debug\\aie.wav");
+                }
+            }
+            else // Difficulté 3
+            {
+                // Vérification pour le premier bucheron dans le niveau 3
+                if (bucheron != null && joueurX == bucheron.X && joueurY == bucheron.Y && humain)
+                {
+                    Partiee.Enlevervie(ref JoueurVie, coeur1, coeur2, coeur3, 2);
+                    if (JoueurVie <= 0)
+                    {
+                        GameOver();
+                    }
+                    else
+                    {
+                        Partiee.ResetPositions(ref joueurX, ref joueurY);
+                        this.panel1.Invalidate();
+                    }
+                    bruitage("C:\\Users\\jessy\\Desktop\\codegit\\Jeu pacman\\bin\\Debug\\aie.wav");
+                }
+
+                // Vérification pour le deuxième bucheron dans le niveau 3
+                if (bucheron2 != null && joueurX == bucheron2.X && joueurY == bucheron2.Y && humain)
+                {
+                    Partiee.Enlevervie(ref JoueurVie, coeur1, coeur2, coeur3, 2);
+                    if (JoueurVie <= 0)
+                    {
+                        GameOver();
+                    }
+                    else
+                    {
+                        Partiee.ResetPositions(ref joueurX, ref joueurY);
+                        this.panel1.Invalidate();
+                    }
+                    bruitage("C:\\Users\\jessy\\Desktop\\codegit\\Jeu pacman\\bin\\Debug\\aie.wav");
+                }
+            }
+
+            // Vérification de réussite du niveau pour les villageois
+            if (villageois != null && joueurX == villageois.X && joueurY == villageois.Y && !humain)
+            {
+                if (villageois2 != null)
+                {
+                    
+                    niveaureussitverif(ref stagelevelencours, ennemiTimera, ref verifdifficultetermine, ennemiTimerb, ref villageois, ref villageois2, panel1, passagelvl, ref stagereussi, joueurX, joueurY, villageoisImage, potionImage, hauteur, largeur, lab, potion, niveau, NouvellePartie.difficulte);
+                    if (verifdifficultetermine)
+                    {
+                        Main mainform = new Main();
+                        mainform.Show();
+                        this.Hide();
+                    }
+                }
+            }
+            else if (villageois2 != null && joueurX == villageois2.X && joueurY == villageois2.Y && !humain && stagelevelencours == 2)
+            {
+                if (villageois != null)
+                {
+                    niveaureussitverif(ref stagelevelencours, ennemiTimera, ref verifdifficultetermine, ennemiTimerb, ref villageois2, ref villageois, panel1, passagelvl, ref stagereussi, joueurX, joueurY, villageoisImage, potionImage, hauteur, largeur, lab, potion, niveau, NouvellePartie.difficulte);
+                    if (verifdifficultetermine)
+                    {
+                        Main mainform = new Main();
+                        mainform.Show();
+                        this.Hide();
+                    }
+                }
+            }
+            else if (bucheron != null && joueurX == bucheron.X && joueurY == bucheron.Y && !humain)
+            {
+                if (NouvellePartie.difficulte==2)
+                {
+                    bucheron2 = null;
+                    
+                }
+
+                niveaureussitverifalternatif(ref stagelevelencours, ennemiTimera, ref verifdifficultetermine, ennemiTimerb, ref bucheron, ref bucheron2, panel1, passagelvl, ref stagereussi, joueurX, joueurY, villageoisImage, potionImage, hauteur, largeur, lab, potion, niveau, NouvellePartie.difficulte);
+                if (verifdifficultetermine)
+                {
+                    Main mainform = new Main();
+                    mainform.Show();
+                    this.Hide();
+                }
+            }
+            else if (bucheron2 != null && joueurX == bucheron2.X && joueurY == bucheron2.Y && !humain )
+            {
+                if (bucheron != null)
+                {
+                    niveaureussitverif(ref stagelevelencours, ennemiTimerb, ref verifdifficultetermine, ennemiTimera, ref bucheron2, ref bucheron, panel1, passagelvl, ref stagereussi, joueurX, joueurY, villageoisImage, potionImage, hauteur, largeur, lab, potion, niveau, NouvellePartie.difficulte);
+                    if (verifdifficultetermine)
+                    {
+                        Main mainform = new Main();
+                        mainform.Show();
+                        this.Hide();
+                    }
+                }
+            }
+
         }
-        
+
+
         private void label1_Click(object sender, EventArgs e)
-        {
+            {
 
-        }
-       
-    
-    //private void Timer_Tick(object sender, EventArgs e)
-    //    {
-    //        if (stopwatch.ElapsedMilliseconds > MaxDurationMilliseconds)
-    //        {
-    //            Dispose();
-    //            return;
-    //        }
+            }
 
-    //        Balle.Move();
 
-    //        // Vérification de la collision avec le joueur
-    //        if (Balle.pictureBox.Bounds.IntersectsWith(new Rectangle(joueurX, joueurY, 20, 20)))
-    //        {
-    //            JoueurVie--;
-
-    //            if (JoueurVie == 2)
-    //            {
-    //                coeur3.Visible = false;
-    //            }
-    //            else if (JoueurVie == 1)
-    //            {
-    //                coeur2.Visible = false;
-    //            }
-    //            else if (JoueurVie == 0)
-    //            {
-    //                coeur1.Visible = false;
-    //            }
-    //            bruitage("C:\\Users\\jessy\\Desktop\\codegit\\Jeu pacman\\bin\\Debug\\aie.wav");
-
-    //            if (JoueurVie <= 0)
-    //            {
-    //                GameOver();
-    //            }
-    //            else
-    //            {
-    //                Partiee.ResetPositions(ref joueurX, ref joueurY);
-    //                this.panel1.Invalidate();
-    //            }
-    //            Dispose();
-    //        }
-
-            // Vérification des limites de l'écran ou d'autres conditions de disparition
-        //    if (Balle.pictureBox.Left < 10 || Balle.pictureBox.Left > 300 || Balle.pictureBox.Top < 10 || Balle.pictureBox.Top > 300)
-        //    {
-        //        Dispose();
-        //    }
-        //}
 
         private void timer_JourNuit_Tick(object sender, EventArgs e)
         {
-            compteurseconde++;
-
-            if (compteurseconde >= 30)
+            if (premierDeplacement)
             {
 
-                if (humain && JoueurVie != 0)
-                {
-                    humain = false;
-                    Partiee.bruitage(hurlementloup);
-                    joueurImage = new Bitmap("C:\\Users\\jessy\\Desktop\\codegit\\images\\loup.png");
 
-                }
-                else
-                {
-                    humain = true;
-                    joueurImage = new Bitmap("C:\\Users\\jessy\\Desktop\\codegit\\images\\humain.png");
 
+                compteurseconde++; // Démarrer le Timer au premier déplacement du joueur
+
+                if (compteurseconde >= 30)
+                {
+
+                    if (humain && JoueurVie != 0)
+                    {
+                        humain = false;
+                        Partiee.bruitage(hurlementloup);
+                        joueurImage = new Bitmap("C:\\Users\\jessy\\Desktop\\codegit\\images\\loup.png");
+
+                    }
+                    else
+                    {
+                        humain = true;
+                        joueurImage = new Bitmap("C:\\Users\\jessy\\Desktop\\codegit\\images\\humain.png");
+
+                    }
+                    compteurseconde = 0;
                 }
-                compteurseconde = 0;
+
+                TimeSpan timeSpan = TimeSpan.FromSeconds(compteurseconde);
+                this.compteurr.Text = timeSpan.ToString(@"mm\:ss");
+
+            }
+        }
+
+            private void button1_Click(object sender, EventArgs e)
+            {
+
             }
 
-            TimeSpan timeSpan = TimeSpan.FromSeconds(compteurseconde);
-            this.compteurr.Text = timeSpan.ToString(@"mm\:ss");
+            private void pictureBox1_Click(object sender, EventArgs e)
+            {
 
+            }
+            private void UpdatePlayerPosition(int x, int y)
+            {
+                Balle.joueurX = x;
+                Balle.joueurY = y;
+            }
+
+            private void Jeu_FormClosing(object sender, FormClosingEventArgs e)
+            {
+
+                this.Close();
+            }
+
+            private void pictureBox3_Click(object sender, EventArgs e)
+            {
+
+            }
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Jeu_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            this.Close();
-        }
-
-        private void pictureBox3_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 
-
-}
